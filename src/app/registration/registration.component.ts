@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AppService } from '../app.service';
+import { isFutureTime, matchPassword } from '../functions/validators.functions';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 
@@ -12,12 +13,14 @@ import { AuthService } from '../services/auth.service';
 })
 export class RegistrationComponent implements OnInit {
   form: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.minLength(4), Validators.maxLength(20), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
+    firstName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
+    lastName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
+    dateOfBirth: new FormControl('', [isFutureTime(new Date()), Validators.required]),
     email: new FormControl('', [Validators.email, Validators.required]),
-    password: new FormControl('', [Validators.minLength(8), Validators.maxLength(20),
+    password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16),
     Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
-    Validators.required]),
-    phone: new FormControl('', [])
+    Validators.required, matchPassword]),
+    repeatPassword: new FormControl('', [matchPassword, Validators.required])
   });
 
   constructor(private appService: AppService, private authService: AuthService) { }

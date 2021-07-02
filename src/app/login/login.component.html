@@ -1,1 +1,31 @@
-<p>login works!</p>
+<mat-card class="mat-elevation-z8 center card">
+    <form class="col" [formGroup]="form">
+        <h1 style="color: gray; text-align: center; margin:12px 0 24px 0;">Login</h1>
+        <mat-form-field appearance="outline">
+            <mat-label style="margin-left:8px; margin-top:8px;">Email</mat-label>
+            <mat-icon class="icon" matPrefix>email</mat-icon>
+            <input matInput style="margin-left:8px;" type="email" formControlName="email" placeholder="Enter Your Email"
+                autocomplete="off" required>
+            <mat-error *ngIf="form.get('email').hasError('required')">ⓘ Please enter your email id – it's
+                required
+            </mat-error>
+            <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">ⓘ
+                Please enter a valid email address – it's invalid
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label style="margin-left:8px; margin-top: 6px;">Password</mat-label>
+            <mat-icon class="icon" matPrefix>lock</mat-icon>
+            <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="password"
+                placeholder="Password" required>
+            <mat-error *ngIf="form.get('password').hasError('required')">ⓘ Please enter your password – it's
+                required</mat-error>
+        </mat-form-field>
+    </form>
+    <div class="center col-fill">
+        <button style="width: 220px; margin-bottom: 8px; margin-top: 8px; background-color:#173b67; color: white;" mat-raised-button (click)="onLoginClick(form.value)">LOGIN</button>
+        <button mat-button style="margin-top: 6px; margin-bottom: 4px;" routerLink='/registration'>Not a member? <span style="color: rgb(51, 183, 228);">Sign up now!</span></button>
+        <button mat-button routerLink='/auth/reset-password'>Forgot Passowrd?</button>
+    </div>
+</mat-card>

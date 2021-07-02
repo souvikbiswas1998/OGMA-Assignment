@@ -21,7 +21,7 @@ export class AuthGuardGuard implements CanActivate {
           console.error('Valid uid. Routing to Dashboard');
           this.router.navigate(['/dashboard']);
         }
-        return Boolean(uid);
+        return !Boolean(uid);
       }));
   }
 

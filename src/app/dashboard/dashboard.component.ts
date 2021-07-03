@@ -14,8 +14,12 @@ import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.comp
 })
 // tslint:disable: no-inferrable-types
 export class DashboardComponent implements OnInit {
+  // thumbnail = 'https://firebasestorage.googleapis.com/v0/b/t-tax-db.appspot.com/o/thumbnails%2F9ZScQqh28jtyCd5ORJnF.jpg?alt=media&token=d134d550-a6d2-4e2f-b866-5d429392b438';
+  thumbnail = ''
   public searchedTerm: string = '';
   public isLogin: boolean = false;
+
+  public posts: Post[] = [];
 
   constructor(
     private authService: AuthService,
@@ -27,7 +31,11 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
     this.postService.getPosts().subscribe((posts) => {
-      console.log(posts);
+      this.posts = posts;
+      this.posts.push(...this.posts);
+      this.posts.push(...this.posts);
+      this.posts.push(...this.posts);
+      this.posts.push(...this.posts);
     });
   }
 

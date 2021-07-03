@@ -13,12 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { PostService } from '../services/post.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from '../shared/shared.module';
+import { HighlightPipe } from '../custom-pipes/highlight.pipe';
+import { SearchPipe } from '../custom-pipes/search.pipe';
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    DetailsComponent
+    DetailsComponent,
+    SearchPipe, HighlightPipe
   ],
   imports: [
     CommonModule,

@@ -19,8 +19,8 @@
         <mat-form-field>
             <mat-label>Privacy</mat-label>
             <mat-select formControlName="privacy" required>
-              <mat-option value="public">Public</mat-option>
-              <mat-option value="private">Private</mat-option>
+              <mat-option value="1">Public</mat-option>
+              <mat-option value="2">Private</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('privacy').hasError('required')">ⓘ Required</mat-error>
             <mat-hint align="end">Select privacy ^</mat-hint>

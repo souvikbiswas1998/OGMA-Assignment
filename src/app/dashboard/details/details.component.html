@@ -3,7 +3,8 @@
     <mat-card-header>
       <div mat-card-avatar style="background-size: cover;" [ngStyle]="{'background-image': post.thumbnail ? 'url(' + post.thumbnail + ')' : ''}"></div>
       <mat-card-title>{{post.title}}</mat-card-title>
-      <mat-card-subtitle>{{post.privacy}}</mat-card-subtitle>
+      <mat-card-subtitle>{{post.privacy === '0' ? 'Public' : post.privacy === '1' ? 'Private' : post.privacy}}</mat-card-subtitle>
+      <button mat-button><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'settings' : post.privacy}}</mat-icon></button>
       <button mat-button (click)="edit()"><mat-icon>edit</mat-icon></button>
     </mat-card-header>
     <!-- <img

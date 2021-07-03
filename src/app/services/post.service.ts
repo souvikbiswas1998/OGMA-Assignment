@@ -27,7 +27,6 @@ export class PostService {
         url => {
           console.log(url);
           const post: Post = {
-            author: this.auth?.currentUser?.name || 'no name',
             // tslint:disable-next-line: object-literal-shorthand
             id: id,
             thumbnail: url
@@ -37,13 +36,16 @@ export class PostService {
       );
     });
 
-    return {percentageChanges: fileUploadTask, id};
+    return { percentageChanges: fileUploadTask, id };
   }
 
   public addEditPost(post: Post): Promise<any> {
     if (!post.id) {
       post.id = this.afs.createId();
     }
+    post.author = this.auth?.currentUser?.name || 'no name';
+    post.authorId = this.auth?.currentUser?.uid || 'no uid';
+
     return this.afs.collection(environment.database.posts).doc(post.id).set(post, { merge: true });
   }
 

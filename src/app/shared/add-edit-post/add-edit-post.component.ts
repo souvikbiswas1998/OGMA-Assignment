@@ -13,9 +13,9 @@ import { PostService } from 'src/app/services/post.service';
 export class AddEditPostComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
-    title: new FormControl('', [Validators.minLength(3), Validators.maxLength(50), Validators.required]),
+    title: new FormControl('', [Validators.minLength(5), Validators.maxLength(80), Validators.required]),
     privacy: new FormControl('', [Validators.required]),
-    content: new FormControl('', [Validators.minLength(3), Validators.required]),
+    content: new FormControl('', [Validators.minLength(100), Validators.maxLength(500), Validators.required]),
   });
   file: any;
   id: any;

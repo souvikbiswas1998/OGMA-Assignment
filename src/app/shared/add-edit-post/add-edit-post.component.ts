@@ -19,6 +19,8 @@ export class AddEditPostComponent implements OnInit {
   });
   file: any;
   id: any;
+  // tslint:disable: no-inferrable-types
+  disable: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPostComponent>,
@@ -37,6 +39,8 @@ export class AddEditPostComponent implements OnInit {
   public submit(): void {
     if (this.form.valid) {
       this.dialogRef.close({...this.form.value, id: this.id ? this.id : null});
+    } else {
+      this.appService.openSnackBar('Check the errors.', '');
     }
   }
 
@@ -48,6 +52,7 @@ export class AddEditPostComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   public onSelect(files: FileList) {
+    this.disable = true;
     if (files && files.length > 0) {
       this.photoLoader = true;
       this.file = files.item(0);
@@ -78,6 +83,7 @@ export class AddEditPostComponent implements OnInit {
     }
     const x = this.postService.uploadThumbnail(this.blob);
     this.id = x.id;
+    this.disable = false;
     x.percentageChanges.percentageChanges().subscribe((data: any) => {
       console.log(data);
     });

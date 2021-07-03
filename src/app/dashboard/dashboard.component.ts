@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { first } from 'rxjs/operators';
 import { AppService } from '../app.service';
+import { Post } from '../models/post';
 import { AuthService } from '../services/auth.service';
+import { PostService } from '../services/post.service';
 import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.component';
 
 @Component({
@@ -18,12 +20,15 @@ export class DashboardComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private appService: AppService,
+    private postService: PostService,
     public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
-    // this.isLogin = Boolean(this.authService?.currentUser?.uid);
+    this.postService.getPosts().subscribe((posts) => {
+      console.log(posts);
+    });
   }
 
   public logout(): void {
@@ -43,8 +48,10 @@ export class DashboardComponent implements OnInit {
         },
       });
 
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(result);
+      dialogRef.afterClosed().subscribe((result: Post) => {
+        result.time = new Date();
+        this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
+        .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));
       });
     } else {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');

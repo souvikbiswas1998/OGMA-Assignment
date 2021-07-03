@@ -4,5 +4,6 @@ export interface Post {
     title?: string;
     privacy?: ('public' | 'private');
     content?: string;
-    author: string;
+    author?: string;
+    time?: Date;
 }

@@ -26,9 +26,9 @@
             <mat-hint align="end">Select privacy ^</mat-hint>
         </mat-form-field>
     </form>
-    <input id="file" type="file" accept="image/*" (change)="onSelect($event.target.files)">
+    <input id="file" type="file" accept="image/jpg" (change)="onSelect($event.target.files)">
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button (click)="submit()" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="submit()" [disabled]="disable" cdkFocusInitial>Ok</button>
 </div>

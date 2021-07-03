@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class HighlightPipe implements PipeTransform {
 
+  // tslint:disable-next-line: variable-name
   constructor(private _sanitizer: DomSanitizer) { }
 
   transform(list: any, searchText: string): any[] {

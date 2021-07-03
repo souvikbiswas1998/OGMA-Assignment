@@ -14,8 +14,7 @@ import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.comp
 })
 // tslint:disable: no-inferrable-types
 export class DashboardComponent implements OnInit {
-  // thumbnail = 'https://firebasestorage.googleapis.com/v0/b/t-tax-db.appspot.com/o/thumbnails%2F9ZScQqh28jtyCd5ORJnF.jpg?alt=media&token=d134d550-a6d2-4e2f-b866-5d429392b438';
-  thumbnail = ''
+
   public searchedTerm: string = '';
   public isLogin: boolean = false;
 

@@ -13,12 +13,13 @@ export class PostService {
 
   constructor(private storage: AngularFireStorage, private afs: AngularFirestore, private auth: AuthService) { }
 
-  public uploadThumbnail(blob: Blob): AngularFireUploadTask {
-    if (!blob) { throw new Error('Invalid Parameters'); }
-    const filePath = 'profile-photos' + '/' + firestoreDate() + '.jpg';
+  public uploadThumbnail(imageURL: string): any {
+    if (!imageURL) { throw new Error('Invalid Parameters'); }
+    const id = this.afs.createId();
+    const filePath = 'thumbnails' + '/' + id + '.jpg';
     const storageRef = this.storage.ref(filePath);
-    const meta = { cacheControl: 'private, max-age=15552000' };
-    const fileUploadTask = storageRef.put(blob, meta);
+    const meta = { contentType: 'image/jpg' };
+    const fileUploadTask = storageRef.putString(imageURL, 'data_url', meta);
 
     fileUploadTask.then(snapshot => {
       snapshot.ref.getDownloadURL().then(
@@ -26,7 +27,8 @@ export class PostService {
           console.log(url);
           const post: Post = {
             author: this.auth?.currentUser?.name || 'no name',
-            id: this.afs.createId(),
+            // tslint:disable-next-line: object-literal-shorthand
+            id: id,
             thumbnail: url
           };
           this.addEditPost(post);
@@ -34,10 +36,13 @@ export class PostService {
       );
     });
 
-    return fileUploadTask;
+    return {percentageChanges: fileUploadTask, id};
   }
 
   public addEditPost(post: Post): Promise<any> {
-    return this.afs.collection(environment.database.posts).doc(post.id).set(post, {merge: true});
+    if (!post.id) {
+      post.id = this.afs.createId();
+    }
+    return this.afs.collection(environment.database.posts).doc(post.id).set(post, { merge: true });
   }
 }

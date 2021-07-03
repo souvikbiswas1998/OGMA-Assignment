@@ -65,7 +65,7 @@
                 ⓘ Please enter your password – it's too short</mat-error>
             <mat-error
                 *ngIf="form.get('password').hasError('pattern') && !form.get('password').hasError('minlength')">
-                ⓘ Please enter a stronger password – password must contain a digit and a special character
+                ⓘ Must contain 2 number, 1 Capital, 1 Small and a special character
             </mat-error>
             <mat-error
                 *ngIf="form.get('password').hasError('maxlength') && !form.get('password').hasError('pattern') ">

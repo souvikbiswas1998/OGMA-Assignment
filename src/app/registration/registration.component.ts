@@ -17,8 +17,8 @@ export class RegistrationComponent implements OnInit {
   form: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
     lastName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
-    dateOfBirth: new FormControl('', [isFutureTime(new Date()), isPastTime(new Date((new Date()).setFullYear(1990, 1, 1))), Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$')]),
+    dateOfBirth: new FormControl('', [isFutureTime(new Date()), isPastTime(new Date((new Date()).setFullYear(1989, 11, 31))), Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z0-9._%+-]+@gmail.com$')]),
     password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16),
     Validators.pattern('^(?=(?:[^0-9]*[0-9]){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}$'),
     // Validators.pattern(this.regex),
@@ -39,8 +39,8 @@ export class RegistrationComponent implements OnInit {
       return;
     }
     const user: User = {
-      name: userdata.name,
-      phoneNo: userdata.phone,
+      name: userdata.firstName + ' ' + userdata.lastName,
+      dateOfBirth: userdata.dateOfBirth,
       email: userdata.email,
       password: userdata.password
     };

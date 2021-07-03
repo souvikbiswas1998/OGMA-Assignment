@@ -2,7 +2,7 @@ export interface User {
     uid?: string;
     email?: string;
     name?: string;
-    phoneNo?: string;
+    dateOfBirth?: Date;
     password?: string;
     photoURL?: string;
     timeCreated?: Date;

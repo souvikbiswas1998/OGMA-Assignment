@@ -53,7 +53,7 @@ export class AuthService {
           this.setUserData(user);
         });
     });
-    this.router.navigate(['/auth/generate-passcode']);
+    this.router.navigate(['/dashboard']);
   }
 
   async loginWithEmail(email: string, password: string) {
@@ -61,7 +61,7 @@ export class AuthService {
       .then((fbUser) => {
         localStorage.setItem('email', email);
         this.updateUserData({ uid: fbUser.user.uid, lastLogin: new Date() });
-        this.router.navigate(['/auth/passcode']);
+        this.router.navigate(['/dashboard']);
       });
   }
 
@@ -71,7 +71,7 @@ export class AuthService {
     await this.afAuth.signOut()
       .then(() => {
         localStorage.clear();
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/dashboard']);
       }).catch((error) => {
         window.alert(error.message);
       });
@@ -82,7 +82,6 @@ export class AuthService {
     this.afs.collection(COLLECTION_NAME).doc(user.uid).set(x, { merge: true })
       .then(() => {
         const user1: User = { uid: user.uid };
-        if (x.phoneNo) { user1.phoneNo = x.phoneNo; }
         if (x.email) { user1.email = x.email; }
         if (x.name) { user1.name = x.name; }
         this.afs.collection(environment.database.pui).doc(user.uid).set(user1, { merge: true });
@@ -106,7 +105,6 @@ export class AuthService {
       userType: 'user',
     };
     if (user.email) { _user.email = user.email; }
-    if (user.phoneNo) { _user.phoneNo = user.phoneNo; }
     if (user.photoURL) { _user.photoURL = user.photoURL; }
     if (user.userType) { _user.userType = user.userType; }
     return _user;

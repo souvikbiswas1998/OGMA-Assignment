@@ -17,6 +17,8 @@ export class AddEditPostComponent implements OnInit {
     privacy: new FormControl('', [Validators.required]),
     content: new FormControl('', [Validators.minLength(3), Validators.required]),
   });
+  file: any;
+  id: any;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPostComponent>,
@@ -34,20 +36,21 @@ export class AddEditPostComponent implements OnInit {
 
   public submit(): void {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+      this.dialogRef.close({...this.form.value, id: this.id ? this.id : null});
     }
   }
 
   // tslint:disable: member-ordering
   // tslint:disable: no-inferrable-types
   photoLoader: boolean = false;
-  blob: Blob;
+  blob: string;
   url: string;
 
   // tslint:disable-next-line: typedef
   public onSelect(files: FileList) {
     if (files && files.length > 0) {
       this.photoLoader = true;
+      this.file = files.item(0);
       this.readFileAsURL(files.item(0))
         .then(blob => {
           this.blob = blob;
@@ -58,19 +61,24 @@ export class AddEditPostComponent implements OnInit {
     }
   }
 
-  private async readFileAsURL(file: File | Blob): Promise<string> {
+  private async readFileAsURL(file: File | Blob): Promise<any> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = event => resolve(event.target.result as string);
+      reader.onload = event => resolve(event.target.result as any);
       reader.onerror = error => reject(error);
     });
   }
 
   // tslint:disable-next-line: typedef
   public upload() {
-    console.log(this.blob);
-    this.postService.uploadThumbnail(this.blob).percentageChanges().subscribe((data: any) => {
+    if (this.file.size > 10 * 1024 * 1024) {
+      this.appService.openSnackBar('Max limit is 10 mb', '');
+      return;
+    }
+    const x = this.postService.uploadThumbnail(this.blob);
+    this.id = x.id;
+    x.percentageChanges.percentageChanges().subscribe((data: any) => {
       console.log(data);
     });
   }

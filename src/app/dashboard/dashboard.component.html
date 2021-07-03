@@ -13,8 +13,11 @@
 </mat-form-field>
 searched term: {{ searchedTerm }}
 <div style="align-content: start; display: flex; flex-direction: row-reverse">
-  <button mat-button color="primary" (click)="logout()">
+  <button mat-button color="primary" *ngIf="isLogin" (click)="logout()">
     <mat-icon>logout</mat-icon>
+  </button>
+  <button mat-button color="primary" *ngIf="!isLogin" routerLink='/login'>
+    <mat-icon>login</mat-icon>
   </button>
   <button mat-button color="primary" (click)="openDialog()">
     <mat-icon>add</mat-icon>

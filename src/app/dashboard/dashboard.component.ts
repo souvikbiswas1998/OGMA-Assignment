@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { first } from 'rxjs/operators';
 import { AppService } from '../app.service';
 import { AuthService } from '../services/auth.service';
 import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.component';
@@ -12,6 +13,7 @@ import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.comp
 // tslint:disable: no-inferrable-types
 export class DashboardComponent implements OnInit {
   public searchedTerm: string = '';
+  public isLogin: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -19,7 +21,10 @@ export class DashboardComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
+    // this.isLogin = Boolean(this.authService?.currentUser?.uid);
+  }
 
   public logout(): void {
     this.authService
@@ -31,7 +36,7 @@ export class DashboardComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   public openDialog() {
-    if (!this.authService.currentUser) {
+    if (this.authService.currentUser) {
       const dialogRef = this.dialog.open(AddEditPostComponent, {
         data: {
           animal: 'panda',

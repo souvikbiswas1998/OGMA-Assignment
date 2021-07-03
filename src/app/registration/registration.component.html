@@ -48,8 +48,8 @@
             <mat-error *ngIf="form.get('email').hasError('required')">ⓘ Please enter your email id – it's
                 required
             </mat-error>
-            <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">ⓘ
-                Please enter a valid email address – it's invalid
+            <mat-error *ngIf="form.get('email').hasError('pattern') && !form.get('email').hasError('required')">ⓘ
+                Only @gmail.com allowed – it's invalid
             </mat-error>
         </mat-form-field>
 
@@ -88,6 +88,8 @@
             <!-- <mat-icon class="icon" matPrefix>phone</mat-icon> -->
             <input matInput style="margin-left:8px" type="date" autocomplete="off" formControlName="dateOfBirth"
                 placeholder="Date Of Birth">
+            <mat-error *ngIf="form.get('dateOfBirth').hasError('futureTime')">ⓘ Please enter a past time</mat-error>
+            <mat-error *ngIf="form.get('dateOfBirth').hasError('pastTime')">ⓘ Please enter a future time</mat-error>
         </mat-form-field>
     </form>
     <div class="center col-fill">

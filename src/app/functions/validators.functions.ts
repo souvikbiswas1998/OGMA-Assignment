@@ -20,7 +20,15 @@ export const matchPassword = (c: AbstractControl) => {
 export const isFutureTime = (date: Date): ValidatorFn => {
   return (control: AbstractControl): { futureTime: boolean } => {
     // tslint:disable-next-line: curly
-    if (control.value && timeStringToDate(control.value, date) > firestoreDate()) return { futureTime: true };
+    if (control.value && new Date(control.value) > date) return { futureTime: true };
+    else { return null; }
+  };
+};
+
+export const isPastTime = (date: Date): ValidatorFn => {
+  return (control: AbstractControl): { pastTime: boolean } => {
+    // tslint:disable-next-line: curly
+    if (control.value && new Date(control.value) < date) return { pastTime: true };
     else { return null; }
   };
 };

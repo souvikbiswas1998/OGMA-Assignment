@@ -5,7 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
+// tslint:disable: no-inferrable-types
 export class DashboardComponent implements OnInit {
+  public searchedTerm: string = '';
 
   constructor() { }
 

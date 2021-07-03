@@ -8,7 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -19,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     LoginRoutingModule,
     FormsModule, MatInputModule, ReactiveFormsModule,
-    MatCardModule, MatIconModule, MatButtonModule, MatDividerModule
+    MatCardModule, MatIconModule, MatButtonModule
   ]
 })
 export class LoginModule { }

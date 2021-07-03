@@ -13,7 +13,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class RegistrationComponent implements OnInit {
   // regex = `^(?=.*[0-9]{2})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,16}$`;
-  regex = `^(?=(?:\D*\d){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}`; //final regex pattern
+  regex = `^(?=(?:\D*\d){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}`; // final regex pattern
   form: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
     lastName: new FormControl('', [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),

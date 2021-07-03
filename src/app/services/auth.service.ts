@@ -116,7 +116,7 @@ export class AuthService {
 
   private getUserData(uid: string): Observable<User> {
     return this.afs.collection(COLLECTION_NAME).doc(uid).valueChanges().pipe(takeUntil(this.ngUnsubscribe))
-      .pipe(map((data: User) => { console.log('getUserData called'); if (data) { this.currentUser = data; } return { ...data, uid }; }));
+      .pipe(map((data: User) => { if (data) { this.currentUser = data; this.currentUser.uid = uid; } return { ...data, uid }; }));
   }
 
   public getUserDataPromise(uid: string): Promise<User> {

@@ -29,7 +29,7 @@ export class AddEditPostComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.data.post) {
+    if (this.data?.post) {
       this.form.patchValue({
         title: this.data.post.title,
         privacy: this.data.post.privacy,

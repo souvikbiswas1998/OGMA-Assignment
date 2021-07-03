@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // MatPaginator Inputs
   length = 0;
   pageSize = 0;
-  pageSizeOptions: number[] = [16];
+  pageSizeOptions: number[] = [15];
 
   // MatPaginator Output
   pageEvent: PageEvent;

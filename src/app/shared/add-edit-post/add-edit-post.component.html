@@ -28,7 +28,7 @@
             <mat-hint align="end">Select privacy ^</mat-hint>
         </mat-form-field>
     </form>
-    <input id="file" type="file" accept="image/jpg" (change)="onSelect($event.target.files)" *ngIf="!data?.post">
+    <input id="file" type="file" accept="image/jpeg" (change)="onSelect($event.target.files)" *ngIf="!data?.post">
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>

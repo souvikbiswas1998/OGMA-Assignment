@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import { Post } from 'src/app/models/post';
+import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from 'src/app/services/post.service';
 import { AddEditPostComponent } from 'src/app/shared/add-edit-post/add-edit-post.component';
@@ -14,6 +15,7 @@ import { AddEditPostComponent } from 'src/app/shared/add-edit-post/add-edit-post
 })
 export class DetailsComponent implements OnInit {
   post: Post;
+  currentUser: User;
 
   constructor(
     private authService: AuthService,
@@ -24,6 +26,7 @@ export class DetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.currentUser;
     this.aRoute.params.subscribe(data => {
       this.postService.getPost(data.id).subscribe(post => {
         console.log(post);
@@ -34,10 +37,10 @@ export class DetailsComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   public edit() {
-    if (this.authService.currentUser) {
+    if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
       const dialogRef = this.dialog.open(AddEditPostComponent, {
         data: {
-          animal: 'panda',
+          post: this.post
         },
       });
 

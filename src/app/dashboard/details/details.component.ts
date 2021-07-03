@@ -13,6 +13,7 @@ import { AddEditPostComponent } from 'src/app/shared/add-edit-post/add-edit-post
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
+  post: Post;
 
   constructor(
     private authService: AuthService,
@@ -26,6 +27,7 @@ export class DetailsComponent implements OnInit {
     this.aRoute.params.subscribe(data => {
       this.postService.getPost(data.id).subscribe(post => {
         console.log(post);
+        this.post = post;
       });
     });
   }

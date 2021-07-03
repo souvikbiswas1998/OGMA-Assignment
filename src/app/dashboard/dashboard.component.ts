@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,9 +11,16 @@ import { Component, OnInit } from '@angular/core';
 export class DashboardComponent implements OnInit {
   public searchedTerm: string = '';
 
-  constructor() { }
+  constructor(private authService: AuthService, private appService: AppService) { }
 
   ngOnInit(): void {
   }
 
+  public logout(): void {
+    this.authService.SignOut().then(() => this.appService.openSnackBar('Logged out successfully', 'Dismiss'))
+  }
+
+  public create(): void {
+
+  }
 }

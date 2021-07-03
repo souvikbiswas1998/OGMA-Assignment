@@ -4,29 +4,31 @@
             <input matInput type="text" autocomplete="off" formControlName="title" placeholder="title" required>
             <mat-error *ngIf="form.get('title').hasError('required')">ⓘ Required</mat-error>
             <mat-error *ngIf="form.get('title').hasError('minlength') && !form.get('title').hasError('required')">
-                ⓘ Minimum 3 characters are needed.</mat-error>
-            <mat-error *ngIf="form.get('title').hasError('maxlength') && !form.get('title').hasError('pattern')">
-                ⓘ Maximum 50 characters are allowed.</mat-error>
+                ⓘ Minimum 5 characters are needed.</mat-error>
+            <mat-error *ngIf="form.get('title').hasError('maxlength') && !form.get('title').hasError('minlength')">
+                ⓘ Maximum 100 characters are allowed.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <input matInput type="text" autocomplete="off" formControlName="content" placeholder="content" required>
             <mat-error *ngIf="form.get('content').hasError('required')">ⓘ Required</mat-error>
             <mat-error *ngIf="form.get('content').hasError('minlength') && !form.get('content').hasError('required')">
-                ⓘ Minimum 3 characters are needed.</mat-error>
+                ⓘ Minimum 100 characters are needed.</mat-error>
+            <mat-error *ngIf="form.get('content').hasError('maxlength') && !form.get('content').hasError('minlength')">
+                ⓘ Maximum 500 characters are allowed.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Privacy</mat-label>
             <mat-select formControlName="privacy" required>
-              <mat-option value="1">Public</mat-option>
-              <mat-option value="2">Private</mat-option>
+              <mat-option value="0">Public</mat-option>
+              <mat-option value="1">Private</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('privacy').hasError('required')">ⓘ Required</mat-error>
             <mat-hint align="end">Select privacy ^</mat-hint>
         </mat-form-field>
     </form>
-    <input id="file" type="file" accept="image/jpg" (change)="onSelect($event.target.files)">
+    <input id="file" type="file" accept="image/jpg" (change)="onSelect($event.target.files)" *ngIf="!data?.post">
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>

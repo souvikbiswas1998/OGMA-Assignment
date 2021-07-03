@@ -36,6 +36,7 @@ export class RegistrationComponent implements OnInit {
     const userdata = this.form.value;
     if (!this.form.valid) {
       this.appService.openSnackBar('Please rectify the errors on the form.', '');
+      this.form.markAllAsTouched();
       return;
     }
     const user: User = {

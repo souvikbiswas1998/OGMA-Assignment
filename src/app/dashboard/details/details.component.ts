@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
 import { Post } from 'src/app/models/post';
 import { User } from 'src/app/models/user';
@@ -13,9 +14,12 @@ import { AddEditPostComponent } from 'src/app/shared/add-edit-post/add-edit-post
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   post: Post;
   currentUser: User;
+  // tslint:disable-next-line: variable-name
+  private _postSubs: Subscription;
+  private paramSubs: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -25,11 +29,15 @@ export class DetailsComponent implements OnInit {
     private aRoute: ActivatedRoute
   ) { }
 
+  ngOnDestroy(): void {
+    this._postSubs?.unsubscribe();
+    this.paramSubs?.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser;
-    this.aRoute.params.subscribe(data => {
-      this.postService.getPost(data.id).subscribe(post => {
-        console.log(post);
+    this.paramSubs = this.aRoute.params.subscribe(data => {
+      this._postSubs = this.postService.getPost(data.id).subscribe(post => {
         this.post = post;
       });
     });
@@ -45,6 +53,7 @@ export class DetailsComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((result: Post) => {
+        result.id = this.post.id;
         result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
         .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));

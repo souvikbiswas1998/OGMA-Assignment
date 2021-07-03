@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   // tslint:disable-next-line: typedef
   onLoginClick(user: any) {
     if (!this.form.valid) {
+      this.form.markAllAsTouched();
       this.appService.openSnackBar('Please rectify the errors on the form.', '');
       return;
     }

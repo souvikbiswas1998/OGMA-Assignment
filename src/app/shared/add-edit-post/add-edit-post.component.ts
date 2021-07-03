@@ -29,7 +29,13 @@ export class AddEditPostComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
+    if (this.data.post) {
+      this.form.patchValue({
+        title: this.data.post.title,
+        privacy: this.data.post.privacy,
+        content: this.data.post.content
+      });
+    }
   }
 
   public onNoClick(): void {
@@ -40,6 +46,7 @@ export class AddEditPostComponent implements OnInit {
     if (this.form.valid) {
       this.dialogRef.close({...this.form.value, id: this.id ? this.id : null});
     } else {
+      this.form.markAllAsTouched();
       this.appService.openSnackBar('Check the errors.', '');
     }
   }

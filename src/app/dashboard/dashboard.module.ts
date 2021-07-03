@@ -11,6 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PostService } from '../services/post.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import { PostService } from '../services/post.service';
     DashboardRoutingModule,
     MatGridListModule,
     FormsModule, MatInputModule, ReactiveFormsModule,
-    MatCardModule, MatIconModule, MatButtonModule
+    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule,
+    SharedModule
   ],
   providers: [ PostService ]
 })

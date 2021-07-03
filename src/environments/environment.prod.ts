@@ -11,7 +11,7 @@ export const environment = {
   },
   database: {
     user: 'users_test',
-    chat: 'chats_test',
+    posts: 'posts_test',
     contact: 'contacts_test',
     requestList: 'requests_test',
     pui: 'public-user-info_test'

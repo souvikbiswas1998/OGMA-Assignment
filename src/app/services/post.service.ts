@@ -66,4 +66,8 @@ export class PostService {
       return this._posts;
     }));
   }
+
+  public getPost(id: string): Observable<Post> {
+    return this.afs.collection(environment.database.posts).doc(id).valueChanges();
+  }
 }

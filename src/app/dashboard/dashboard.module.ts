@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from '../shared/shared.module';
 import { HighlightPipe } from '../custom-pipes/highlight.pipe';
 import { SearchPipe } from '../custom-pipes/search.pipe';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,8 @@ import { SearchPipe } from '../custom-pipes/search.pipe';
     MatGridListModule,
     FormsModule, MatInputModule, ReactiveFormsModule,
     MatCardModule, MatIconModule, MatButtonModule, MatDialogModule,
-    SharedModule
+    SharedModule,
+    MatPaginatorModule
   ],
   providers: [ PostService ]
 })

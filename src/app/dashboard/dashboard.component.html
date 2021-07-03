@@ -26,12 +26,18 @@ searched term: {{ searchedTerm }}
 <br />
 
 <mat-grid-list cols="4" rowHeight="2:1">
-  <mat-grid-tile *ngFor="let post of posts | search: searchedTerm" [routerLink]="post.id">
+  <mat-grid-tile *ngFor="let post of posts | search: searchedTerm" style="cursor: pointer;" [routerLink]="post.id">
     <mat-card>
       <mat-card-header>
-        <div mat-card-avatar style="background-size: cover;" [ngStyle]="{'background-image': 'url(' + post.thumbnail + ')'}"></div>
+        <div mat-card-avatar style="background-size: cover;" [ngStyle]="{'background-image': post.thumbnail ? 'url(' + post.thumbnail + ')' : ''}"></div>
         <mat-card-subtitle [innerHTML]="post.title | highlight: searchedTerm"></mat-card-subtitle>
       </mat-card-header>
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
+
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEventSubject.next($event)">
+</mat-paginator>

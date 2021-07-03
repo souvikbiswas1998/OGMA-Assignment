@@ -19,13 +19,12 @@ export class PostService {
     const id = this.afs.createId();
     const filePath = 'thumbnails' + '/' + id + '.jpg';
     const storageRef = this.storage.ref(filePath);
-    const meta = { contentType: 'image/jpg' };
+    const meta = { contentType: 'image/jpg', cacheControl: 'private, max-age=15552000' };
     const fileUploadTask = storageRef.putString(imageURL, 'data_url', meta);
 
     fileUploadTask.then(snapshot => {
       snapshot.ref.getDownloadURL().then(
         url => {
-          console.log(url);
           const post: Post = {
             // tslint:disable-next-line: object-literal-shorthand
             id: id,

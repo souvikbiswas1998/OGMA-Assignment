@@ -11,7 +11,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PostService {
-  _getPosts: Observable<Post[]>;
 
   constructor(private storage: AngularFireStorage, private afs: AngularFirestore, private auth: AuthService) { }
 
@@ -53,7 +52,7 @@ export class PostService {
   // tslint:disable-next-line: variable-name
   private _posts: Post[] = [];
   public getPosts(): Observable<Post[]> {
-    this._getPosts =  this.afs.collection(environment.database.posts, ref => {
+    return this.afs.collection(environment.database.posts, ref => {
       return ref.orderBy('time', 'desc'); // .limit(100)
     }).stateChanges().pipe(map(changes => {
       changes.forEach(change => {
@@ -67,17 +66,9 @@ export class PostService {
       });
       return this._posts;
     }));
-
-    return this._getPosts;
-  }
-
-  public unsubscribe() {
-    this._getPosts?.subscribe().unsubscribe();
   }
 
   public getPost(id: string): Observable<Post> {
     return this.afs.collection(environment.database.posts).doc(id).valueChanges();
   }
-
-
 }

@@ -28,8 +28,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pageSize = 0;
   pageSizeOptions: number[] = [15];
 
-  public checkPaginator: boolean = false;
-
   // MatPaginator Output
   pageEvent: PageEvent;
   pageEventSubject: Subject<PageEvent> = new Subject();
@@ -71,13 +69,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public check(): void {
-    this.checkPaginator = !this.checkPaginator;
-    if (this.checkPaginator === true) {
-      this._posts.push(...this._posts);
-      this._posts.push(...this._posts);
-      this.length = this._posts.length;
-      this.posts = this._posts.slice(0, this.pageSize);
-    }
+    this._posts.push(...this._posts);
+    this._posts.push(...this._posts);
+    this.length = this._posts.length;
+    this.posts = this._posts.slice(0, this.pageSize);
   }
 
   public logout(): void {

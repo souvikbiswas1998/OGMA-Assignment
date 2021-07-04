@@ -12,15 +12,17 @@ import { PostService } from 'src/app/services/post.service';
 })
 export class AddEditPostComponent implements OnInit {
 
-  form: FormGroup = new FormGroup({
+  public form: FormGroup = new FormGroup({
     title: new FormControl('', [Validators.minLength(5), Validators.maxLength(80), Validators.required]),
     privacy: new FormControl('', [Validators.required]),
     content: new FormControl('', [Validators.minLength(100), Validators.maxLength(500), Validators.required]),
   });
-  file: any;
-  id: any;
+  public file: any;
+  public id: any;
   // tslint:disable: no-inferrable-types
-  disable: boolean = false;
+  public disable: boolean = false;
+
+  public percentageChanges: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPostComponent>,
@@ -52,24 +54,19 @@ export class AddEditPostComponent implements OnInit {
   }
 
   // tslint:disable: member-ordering
-  // tslint:disable: no-inferrable-types
-  photoLoader: boolean = false;
-  blob: string;
-  url: string;
+  private blob: string;
 
   // tslint:disable-next-line: typedef
   public onSelect(files: FileList) {
     this.disable = true;
     if (files && files.length > 0) {
-      this.photoLoader = true;
       this.file = files.item(0);
       this.readFileAsURL(files.item(0))
         .then(blob => {
           this.blob = blob;
           this.upload();
         })
-        .catch(error => this.appService.openSnackBar('Error opening file: ' + error.message, ''))
-        .finally(() => this.photoLoader = false);
+        .catch(error => this.appService.openSnackBar('Error opening file: ' + error.message, ''));
     }
   }
 
@@ -91,8 +88,6 @@ export class AddEditPostComponent implements OnInit {
     const x = this.postService.uploadThumbnail(this.blob);
     this.id = x.id;
     this.disable = false;
-    x.percentageChanges.percentageChanges().subscribe((data: any) => {
-      console.log(data);
-    });
+    x.percentageChanges.percentageChanges().subscribe((data: any) => this.percentageChanges = data);
   }
 }

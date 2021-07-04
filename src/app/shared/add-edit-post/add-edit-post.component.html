@@ -29,9 +29,10 @@
             <mat-hint align="end">Select privacy ^</mat-hint>
         </mat-form-field>
     </form>
-    <input id="file" type="file" accept="image/jpeg" (change)="onSelect($event.target.files)" *ngIf="!data?.post">
+    <input id="file" type="file" accept="image/jpeg" (change)="onSelect($event.target.files)" style="margin-top: 16px;" *ngIf="!data?.post">
+    <mat-progress-bar mode="determinate" style="margin-top: 24px; height: 20px;" [value]="percentageChanges" *ngIf="!data?.post"></mat-progress-bar>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions style="justify-content: space-between;">
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button (click)="submit()" [disabled]="disable" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="submit()" color="primary" [disabled]="disable" cdkFocusInitial>Ok</button>
 </div>

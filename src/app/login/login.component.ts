@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  form: FormGroup = new FormGroup({
+  public form: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.email, Validators.required]),
     password: new FormControl('', [Validators.minLength(8), Validators.maxLength(20),
     Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   }
 
   // tslint:disable-next-line: typedef
-  onLoginClick(user: any) {
+  public onLoginClick(user: any) {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       this.appService.openSnackBar('Please rectify the errors on the form.', '');

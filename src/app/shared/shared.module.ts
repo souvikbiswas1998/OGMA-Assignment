@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     CommonModule, MatDialogModule, MatButtonModule, MatIconModule,
     FormsModule, MatInputModule, ReactiveFormsModule, MatFormFieldModule,
-    MatOptionModule, MatSelectModule
+    MatOptionModule, MatSelectModule, MatProgressBarModule
   ],
   exports: [ AddEditPostComponent ]
 })

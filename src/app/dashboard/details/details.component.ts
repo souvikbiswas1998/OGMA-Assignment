@@ -15,11 +15,13 @@ import { AddEditPostComponent } from 'src/app/shared/add-edit-post/add-edit-post
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  post: Post;
-  currentUser: User;
+  public post: Post;
+  public currentUser: User;
   // tslint:disable-next-line: variable-name
   private _postSubs: Subscription;
   private paramSubs: Subscription;
+  // tslint:disable-next-line: variable-name
+  private _user: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -32,10 +34,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._postSubs?.unsubscribe();
     this.paramSubs?.unsubscribe();
+    this._user?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.currentUser = this.authService.currentUser;
+    this._user = this.authService.user.subscribe((user) => this.currentUser = user);
+    // this.currentUser = this.authService.currentUser;
     this.paramSubs = this.aRoute.params.subscribe(data => {
       this._postSubs = this.postService.getPost(data.id).subscribe(post => {
         this.post = post;
@@ -53,6 +57,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
       });
 
       dialogRef.afterClosed().subscribe((result: Post) => {
+        // tslint:disable-next-line: no-unused-expression
+        if (!result) { return; }
         result.id = this.post.id;
         result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))

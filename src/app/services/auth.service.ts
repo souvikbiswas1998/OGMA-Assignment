@@ -47,9 +47,7 @@ export class AuthService {
       await this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
         .then((fbUser) => {
           localStorage.setItem('email', user.email);
-          user.provider = 'email';
           user.uid = fbUser.user.uid;
-          user.timeCreated = firebase.firestore.Timestamp.now().toDate();
           this.setUserData(user);
         });
     });
@@ -60,7 +58,7 @@ export class AuthService {
     await this.afAuth.signInWithEmailAndPassword(email, password)
       .then((fbUser) => {
         localStorage.setItem('email', email);
-        this.updateUserData({ uid: fbUser.user.uid, lastLogin: new Date() });
+        this.updateUserData({ uid: fbUser.user.uid });
         this.router.navigate(['/dashboard']);
       });
   }
@@ -98,15 +96,8 @@ export class AuthService {
   private setUser(user: User) {
     const _user: User = {
       name: user.name,
-      timeCreated: firebase.firestore.Timestamp.now().toDate(),
-      lastLogin: firebase.firestore.Timestamp.now().toDate(),
-      lastPasswordModified: firebase.firestore.Timestamp.now().toDate(),
-      provider: user.provider,
-      userType: 'user',
     };
     if (user.email) { _user.email = user.email; }
-    if (user.photoURL) { _user.photoURL = user.photoURL; }
-    if (user.userType) { _user.userType = user.userType; }
     return _user;
   }
 

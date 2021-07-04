@@ -19,7 +19,7 @@ searched term: {{ searchedTerm }}
   <button mat-button color="primary" *ngIf="!isLogin" routerLink='/login'>
     <mat-icon>login</mat-icon>
   </button>
-  <button mat-button color="primary" (click)="openDialog()">
+  <button mat-button color="primary" (click)="openDialog()" onclick="blur()">
     <mat-icon>add</mat-icon>
   </button>
   <button mat-button color="primary" (click)="check()">

@@ -24,15 +24,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private _posts: Post[] = [];
 
   // MatPaginator Inputs
-  length = 0;
-  pageSize = 0;
-  pageSizeOptions: number[] = [15];
+  public length = 0;
+  public pageSize = 0;
+  public pageSizeOptions: number[] = [15];
 
   // MatPaginator Output
-  pageEvent: PageEvent;
-  pageEventSubject: Subject<PageEvent> = new Subject();
-  // tslint:disable-next-line: variable-name
+  public pageEventSubject: Subject<PageEvent> = new Subject();
+  // tslint:disable: variable-name
   private _postsSubs: Subscription;
+  private _user: Subscription;
 
   // tslint:disable-next-line: typedef
   public setPageSizeOptions(setPageSizeOptionsInput: string) {
@@ -51,10 +51,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._postsSubs?.unsubscribe();
     this.pageEventSubject?.unsubscribe();
+    this._user?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
+    this._user = this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
     this._postsSubs = this.postService.getPosts().subscribe((posts) => {
       this._posts = posts;
       this.length = this._posts.length;
@@ -90,6 +91,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(AddEditPostComponent);
 
       dialogRef.afterClosed().subscribe((result: Post) => {
+        // tslint:disable-next-line: no-unused-expression
+        if (!result) { return; }
         result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
         .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));

@@ -5,7 +5,7 @@
       <mat-card-title>{{post.title}}</mat-card-title>
       <mat-card-subtitle>{{post.author || 'no name'}}</mat-card-subtitle>
       <button mat-button><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'vpn_lock' : post.privacy}}</mat-icon></button>
-      <button mat-button (click)="edit()" *ngIf="post?.authorId === currentUser?.uid"><mat-icon>edit</mat-icon></button>
+      <button mat-button (click)="edit()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid"><mat-icon>edit</mat-icon></button>
     </mat-card-header>
     <!-- <img
       mat-card-image

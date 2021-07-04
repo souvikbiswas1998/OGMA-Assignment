@@ -1,5 +1,5 @@
-<div mat-dialog-content>
-    <form [formGroup]="form">
+<div mat-dialog-content style="min-width: 512px;">
+    <form [formGroup]="form" class="flex-col">
         <mat-form-field>
             <input matInput type="text" autocomplete="off" formControlName="title" placeholder="title" required>
             <mat-error *ngIf="form.get('title').hasError('required')">ⓘ Required</mat-error>
@@ -10,7 +10,8 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput type="text" autocomplete="off" formControlName="content" placeholder="content" required>
+            <textarea matInput type="text" autocomplete="off" formControlName="content" placeholder="content" required>
+            </textarea>
             <mat-error *ngIf="form.get('content').hasError('required')">ⓘ Required</mat-error>
             <mat-error *ngIf="form.get('content').hasError('minlength') && !form.get('content').hasError('required')">
                 ⓘ Minimum 100 characters are needed.</mat-error>

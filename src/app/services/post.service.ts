@@ -52,6 +52,7 @@ export class PostService {
   // tslint:disable-next-line: variable-name
   private _posts: Post[] = [];
   public getPosts(): Observable<Post[]> {
+    this._posts = [];
     return this.afs.collection(environment.database.posts, ref => {
       return ref.orderBy('time', 'desc'); // .limit(100)
     }).stateChanges().pipe(map(changes => {

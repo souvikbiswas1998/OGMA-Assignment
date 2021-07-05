@@ -28,6 +28,13 @@ searched term: {{ searchedTerm }}
 </div>
 <br />
 
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEventSubject.next($event)"
+               *ngIf="isPagination">
+</mat-paginator>
+
 <mat-grid-list cols="4" rowHeight="2:1">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
     <mat-card style="cursor: pointer;" [routerLink]="post.id">
@@ -39,8 +46,3 @@ searched term: {{ searchedTerm }}
   </mat-grid-tile>
 </mat-grid-list>
 
-<mat-paginator [length]="length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="pageEventSubject.next($event)">
-</mat-paginator>

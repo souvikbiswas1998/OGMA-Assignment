@@ -34,12 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private _postsSubs: Subscription;
   private _user: Subscription;
 
-  // tslint:disable-next-line: typedef
-  public setPageSizeOptions(setPageSizeOptionsInput: string) {
-    if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
-    }
-  }
+  public isPagination: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -61,6 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.length = this._posts.length;
       this.pageSize = 15;
       this.posts = this._posts.slice(0, this.pageSize);
+      this.isPagination = true;
     });
 
     this.pageEventSubject.subscribe(pageEvent => {
@@ -69,11 +65,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  // tslint:disable-next-line: member-ordering
+  private isTest: boolean = false;
   public check(): void {
-    this._posts.push(...this._posts);
-    this._posts.push(...this._posts);
-    this.length = this._posts.length;
-    this.posts = this._posts.slice(0, this.pageSize);
+    this.isTest = !this.isTest;
+    if (this.isTest) {
+      this._posts.push(...this._posts);
+      this._posts.push(...this._posts);
+      this.length = this._posts.length;
+      this.posts = this._posts.slice(0, this.pageSize);
+    } else {
+      this._postsSubs?.unsubscribe();
+      this.isPagination = false;
+      this._postsSubs = this.postService.getPosts().subscribe((posts) => {
+        this._posts = posts;
+        this.length = this._posts.length;
+        this.posts = this._posts.slice(0, this.pageSize);
+        this.isPagination = true;
+      });
+    }
   }
 
   public logout(): void {

@@ -80,41 +80,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
     });
   }
 
-  removeData(chart): void {
-    chart.data.labels.pop();
-    chart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
-    });
-    chart.update();
-  }
-
-  updateChartData(chart, data, dataSetIndex): void {
-    chart.data.datasets[dataSetIndex].data = data;
-    chart.update();
-  }
-
-  applyFilter(value): void {
-    // console.log(this.chartData.dataSet1);
-    this.barChart.data.datasets[0].data = this.chartData.dataSet1;
-
-    this.barChart.data.datasets.forEach((data, i) => {
-      if (this.lessThanOrGreaterThan === 'greaterThan'){
-        this.barChart.data.datasets[i].data = data.data.map(v => {
-          if (v >= value) { return v; }
-          else { return 0; }
-        });
-       // console.log(">>>>>>>>", this.barChart.data.datasets[i].data);
-      }else{
-        this.barChart.data.datasets[i].data = data.data.map(v => {
-          if (v <= value) { return v; }
-          else { return 0; }
-        });
-        // console.log("?????????", this.barChart.data.datasets[i].data);
-      }
-    });
-    this.barChart.update();
-  }
-
   applyDateFilter(): void{
     // tslint:disable-next-line: radix
     this.barChart.data.labels = this.levelsArr.slice(parseInt(this.from), parseInt(this.toMonth) + 1);
@@ -122,3 +87,16 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
 }
+
+  // removeData(chart): void {
+  //   chart.data.labels.pop();
+  //   chart.data.datasets.forEach((dataset) => {
+  //     dataset.data.pop();
+  //   });
+  //   chart.update();
+  // }
+
+  // updateChartData(chart, data, dataSetIndex): void {
+  //   chart.data.datasets[dataSetIndex].data = data;
+  //   chart.update();
+  // }

@@ -1,6 +1,6 @@
 Dashboard
 You must show top 5 users with posts points. E.g. In the db 15 users register created one post. But yesterday 5 random users among 15 creates 8 posts. So These 5 users listed on dashboard with text like Here are recent top 5 active users. 
-Each post should an image and show image along post title on dashboard.
+@@@Each post should an image and show image along post title on dashboard.
 @@@Logout button should be top right corner
 @@@Pagination button should bottom centered
 
@@ -11,7 +11,7 @@ User can also send the post to trash. After 15/30days post will be deleted autom
 Clicking a post should redirect to post details where I can see post clearly.
 
 Profile
-Create a profile route and on that page logged in user can see edit his/her details.
-Non editable field - email
-Editable fields - First name, last name, password profile picture 
+@@@Create a profile route and on that page logged in user can see edit his/her details.
+@@@Non editable field - email
+@@@Editable fields - First name, last name, password profile picture 
 You must show a graph with received points and date. User should be able to toggle graph data by months and year.

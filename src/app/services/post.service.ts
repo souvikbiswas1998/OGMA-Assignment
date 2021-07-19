@@ -44,6 +44,7 @@ export class PostService {
     }
     post.author = this.auth?.currentUser?.name || 'no name';
     post.authorId = this.auth?.currentUser?.uid || 'no uid';
+    if (this.auth?.currentUser?.photoURL) { post.authorURL = this.auth?.currentUser?.photoURL; }
 
     return this.afs.collection(environment.database.posts).doc(post.id).set(post, { merge: true });
   }

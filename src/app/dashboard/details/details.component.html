@@ -1,17 +1,19 @@
 <div style="height: 95vh; width: 100vw">
   <mat-card class="example-card" *ngIf="post">
     <mat-card-header>
-      <div mat-card-avatar style="background-size: cover;" [ngStyle]="{'background-image': post.thumbnail ? 'url(' + post.thumbnail + ')' : ''}"></div>
+      <div mat-card-avatar style="background-size: cover;">
+        <ngs-avatar size = '36px' [photoUrl]="post?.authorURL" [name]="post?.author"></ngs-avatar>
+      </div>
       <mat-card-title>{{post.title}}</mat-card-title>
       <mat-card-subtitle>{{post.author || 'no name'}}</mat-card-subtitle>
       <button mat-button><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'vpn_lock' : post.privacy}}</mat-icon></button>
       <button mat-button (click)="edit()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid"><mat-icon>edit</mat-icon></button>
     </mat-card-header>
-    <!-- <img
+    <img
       mat-card-image
-      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+      [src]="post?.thumbnail"
       alt="Photo of a Shiba Inu"
-    /> -->
+    />
     <mat-card-content>
       <p>{{post.content}}</p>
     </mat-card-content>

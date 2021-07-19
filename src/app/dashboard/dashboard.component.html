@@ -19,25 +19,31 @@
   </mat-menu>
 </div>
 
-searched term: {{ searchedTerm }}
 
-<div style="align-content: start; display: flex; flex-direction: row-reverse">
+<div class="flex-row" style="flex-grow: 1; justify-content: space-between">
+  <p style="margin: 0 !important;margin-top: 8px !important;">searched term: {{ searchedTerm }}</p>
   <button mat-button color="primary" (click)="openDialog()" onclick="blur()">
     <mat-icon>add</mat-icon>
-  </button>
-  <button mat-button color="primary" (click)="check()">
-    check pagination
   </button>
 </div>
 <br />
 
-<mat-grid-list cols="4" rowHeight="2:1">
+<mat-grid-list cols="4" rowHeight="2:2">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
-    <mat-card style="cursor: pointer;" [routerLink]="post.id">
-      <mat-card-header>
-        <div mat-card-avatar style="background-size: cover;" [ngStyle]="{'background-image': post.thumbnail ? 'url(' + post.thumbnail + ')' : ''}"></div>
+    <mat-card style="cursor: pointer; min-height: 66%; max-height:67%; min-width: 66%; max-width:67%;" [routerLink]="post.id">
+      <mat-card-header class="flex-col" style="height: 64px">
+        <div mat-card-avatar style="background-size: cover;">
+          <ngs-avatar size = '36px' [photoUrl]="post?.authorURL" [name]="post?.author"></ngs-avatar>
+        </div>
         <mat-card-subtitle [innerHTML]="post.title | highlight: searchedTerm"></mat-card-subtitle>
       </mat-card-header>
+      <mat-card-content class="flex-col" style="flex-grow: 1;">
+        <img
+          mat-card-image
+          [src]="post?.thumbnail"
+          alt="Photo not found"
+        />
+      </mat-card-content>
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>

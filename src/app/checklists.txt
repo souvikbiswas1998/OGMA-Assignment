@@ -1,32 +1,17 @@
-1. @@@ Show a search bar that the user can use to search posts by title.
-    Do this locally with filter, map, etc.
-2. @@@ Use a pipe to highlight the search text in post title if matched like WhatsApp. (highlight color-yellow)
-3. @@@ Show posts in a grid 4x4.
-4. @@@ Only show 15 posts and if post collection contains>15 posts use pagination.
-5. @@@ Only thumbnail and title and clicking the thumbnail should redirect the user to post-details page where i should see:
-    5.1 Post thumbnail
-    5.2 Post title
-    5.3 Post privacy type (public | private)
-    5.4 Post content
-    5.5 Post author full name
-6. User can edit his posts only. Only title, content and privacy type are editable. Keep the image as it is in fact don't showany <input type="file" /> in edit form.
-7. @@@ When authenticated visiting /register or /login route via URLshould redirect to /dashboard
-8. @@@ On dashboard show posts from all users. (Use one post collection for saving all posts)
-9. @@@ User can register/login/logout. Form fields:
-    firstNname: Min(5), Max(50)
-    lastNname: Min(5) , Max(50)
-    dateOfBirth: User cannot select year before 1990
-    email: Only accept gmail domains like john.doe@gmail.com 
-    password: Min(8), Max (16). Rules -1 uppercase letter, 1 small lowercase letter,1 symbol, 2 numbers.
-    repeatPassword: Min(8), Max (16). Should match with password and this is only for UI purpose do not save this in user record 
-9.2. @@@ User can create a post with following properties
-    title : min(5), max (80)
-    thumbnail: image is mandatory. max size 10mb. Support only jpeg images and store base64 url. Don't use FormData.
-    content : min (100), max (500)
-    privacy : 1 (public), 2 (private)
-    
-Acceptance Criteria
-1. User shouldn’t be able to create a post if validations failed.
-2. After logout clear user data. Do not should any authenticated details anywhere once logged out.
-3. @@@ Once logged in user should not be able visit /register and /login again.
-4. Pagination should work properly
+Dashboard
+You must show top 5 users with posts points. E.g. In the db 15 users register created one post. But yesterday 5 random users among 15 creates 8 posts. So These 5 users listed on dashboard with text like Here are recent top 5 active users. 
+Each post should an image and show image along post title on dashboard.
+Logout button should be top right corner
+Pagination button should bottom centered
+
+Post
+When creating a post user should receive 5points. Two posts 10 points, three posts 15points.
+If should be able delete his/her posts. On delete deduct -5 points. (Reverse of post add).
+User can also send the post to trash. After 15/30days post will be deleted automatically. (Check firebase cloud functions) 
+Clicking a post should redirect to post details where I can see post clearly.
+
+Profile
+Create a profile route and on that page logged in user can see edit his/her details.
+Non editable field - email
+Editable fields - First name, last name, password profile picture 
+You must show a graph with received points and date. User should be able to toggle graph data by months and year.

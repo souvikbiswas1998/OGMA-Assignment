@@ -14,22 +14,13 @@ export class ProfileComponent implements OnInit, OnDestroy{
   // tslint:disable: variable-name
   private _user: any;
 
-  lessThanOrGreaterThan = 'lessThan';
-  filterLimit = 100;
   barChart;
-  levelsArr = ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug'];
-  months = [{month: 'Jan', value: '0'},
-  {month: 'Feb', value: '1'},
-  {month: 'Mar', value: '2'},
-  {month: 'Apr', value: '3'},
-  {month: 'May', value: '4'},
-  {month: 'Jun', value: '5'},
-  {month: 'Jul', value: '6'},
-  {month: 'Aug', value: '7'}];
+  levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  months;
 
   from = '0';
 
-  toMonth = '7';
+  toMonth;
 
   chartData = {
     dataSet1 : Array.from({ length: 8 }, () => Math.floor(Math.random() * 590) + 10)
@@ -46,13 +37,93 @@ export class ProfileComponent implements OnInit, OnDestroy{
     else {
       this._user = this.auth.isAnyUser.subscribe((val) => {
         if (Boolean(val)) {
-          this.auth.getUserDataPromise(val.uid).then((data) => this.profile = data);
-          this.abc();
+          this.auth.getUserDataPromise(val.uid).then((data) => {
+            this.def();
+            this.abc();
+            this.profile = data;
+          });
         }
       });
     }
   }
+  private def(): void {
+    const x = GetStaticValue();
+    const y = this.levelsArr;
+    this.levelsArr = [];
+    this.levelsArr = this.getYearMonth(x.from.month, x.from.year, 'after');
+    for (let i = x.from.year + 1; i < 2021; i++) {
+      this.levelsArr.push(...y.map(m => m + ' ' + i));
+    }
+    this.levelsArr.push(...this.getYearMonth(6, 2021, 'before'));
+    let z = 0;
 
+    this.months = this.levelsArr.map(m => {const ab =  {month: m, value: z}; z++; return ab; }) as any;
+    this.toMonth = this.months.length - 1;
+    const data: any[] = [];
+    // tslint:disable-next-line: no-shadowed-variable
+    x.points.forEach(data2 => {
+      data.push(...this.getPoints(data2.points));
+    });
+    this.chartData.dataSet1 = data;
+  }
+
+  private getYearMonth(month: number, year: number, arg2: string): string[] {
+    const x = [];
+    if (arg2 === 'before') {
+      // tslint:disable: whitespace
+      // tslint:disable: curly
+      if (month > -1) x.push('Jan '+year);
+      if (month > 0) x.push('Feb '+year);
+      if (month > 1) x.push('Mar '+year);
+      if (month > 2) x.push('Apr '+year);
+      if (month > 3) x.push('May '+year);
+      if (month > 4) x.push('Jun '+year);
+      if (month > 5) x.push('Jul '+year);
+      if (month > 6) x.push('Aug '+year);
+      if (month > 7) x.push('Sep '+year);
+      if (month > 8) x.push('Oct '+year);
+      if (month > 9) x.push('Nov '+year);
+      if (month > 10) x.push('Dec '+year);
+    }
+    if (arg2 === 'after') {
+      if (month < 12) x.unshift('Dec '+year);
+      if (month < 11) x.unshift('Nov '+year);
+      if (month < 10) x.unshift('Oct '+year);
+      if (month < 9) x.unshift('Sep '+year);
+      if (month < 8) x.unshift('Aug '+year);
+      if (month < 7) x.unshift('Jul '+year);
+      if (month < 6) x.unshift('Jun '+year);
+      if (month < 5) x.unshift('May '+year);
+      if (month < 4) x.unshift('Apr '+year);
+      if (month < 3) x.unshift('Mar '+year);
+      if (month < 2) x.unshift('Feb '+year);
+      if (month < 1) x.unshift('Jan '+year);
+    }
+    return x;
+  }
+
+  private getPoints(points: {month: number, point: number}[]): any {
+    const x = [];
+    console.log(points);
+    let y = points.shift();
+    let length: number = points.length;
+    let count = 0;
+    for (let i = 0; i < 12; i++) {
+      if(count > 3) {
+        x.push(0);
+        break;
+      }
+      if(y.month === i) {
+        console.log(y, i);
+        x.push(y?.point || 0);
+        if(points.length > 0) {
+        y = points.shift();
+        length = points.length;
+        } else {count = 4;}
+      } else x.push(0);
+    }
+    return x;
+  }
 
   private abc(): void {
     this.barChart = new Chart('bar', {
@@ -65,7 +136,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
         },
       },
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug'],
+        labels: this.levelsArr,
         datasets: [
           {
             type: 'bar',
@@ -88,6 +159,32 @@ export class ProfileComponent implements OnInit, OnDestroy{
 
 }
 
+// tslint:disable: no-trailing-whitespace
+// tslint:disable-next-line: typedef
+function GetStaticValue() {
+  const x = { from: {year: 2019, month: 1},
+              points: [
+                {year: 2019, points: [
+                  {month: 6, point: 10},
+                  {month: 7, point: 10},
+                  {month: 8, point: 10},
+                  {month: 9, point: 10}
+                ]},
+                {year: 2020, points: [
+                  {month: 2, point: 10},
+                  {month: 4, point: 10},
+                  {month: 7, point: 10},
+                  {month: 10, point: 10},
+                  {month: 11, point: 10}
+                ]},
+                {year: 2021, points: [
+                  {month: 2, point: 10},
+                  {month: 3, point: 10}
+                ]}
+              ]
+            };
+  return x;
+}
   // removeData(chart): void {
   //   chart.data.labels.pop();
   //   chart.data.datasets.forEach((dataset) => {

@@ -73,6 +73,14 @@
       <mat-error *ngIf="form.get('repeatPassword').hasError('notMatched')">ⓘ Passwords must match
       </mat-error>
   </mat-form-field>
+
+  <div>
+    <img height="128px" [src]="profile?.photoURL" alt="No image available"/>
+    <button mat-button (click)="remove()" *ngIf="profile?.photoURL">Remove</button>
+  </div>
+  <input id="file" type="file" accept="image/jpeg" (change)="onSelect($event.target.files)" style="margin-top: 16px;" *ngIf="form">
+  <mat-progress-bar mode="determinate" style="margin-top: 24px; height: 20px;" [value]="percentageChanges" *ngIf="!data?.post"></mat-progress-bar>
+
 </form>
 
 <button style="width: 220px; margin-bottom: 12px; margin-top: 4px; background-color:#173b67; color: white;" mat-raised-button (click)="onsignUp()">Update</button>

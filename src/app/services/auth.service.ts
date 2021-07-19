@@ -8,6 +8,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { User } from '../models/user';
 import { environment } from 'src/environments/environment';
+import { AngularFireStorage } from '@angular/fire/storage';
   // tslint:disable: typedef
   // tslint:disable: variable-name
 
@@ -36,7 +37,7 @@ export class AuthService {
     return user;
   }));
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private router: Router) {
+  constructor(private storage: AngularFireStorage, private afs: AngularFirestore, private afAuth: AngularFireAuth, private router: Router) {
     this.user.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => { this.currentUser = user; });
     this.afAuth.authState.pipe(takeUntil(this.ngUnsubscribe)).subscribe(auth => this._auth.next(auth));
   }
@@ -128,5 +129,24 @@ export class AuthService {
       .valueChanges({ idField: 'uid' }).pipe(first())
       .pipe(map(users => (users.length > 0) ? users[0] : null))
       .toPromise();
+  }
+
+  public uploadThumbnail(imageURL: string): any {
+    if (!imageURL) { throw new Error('Invalid Parameters'); }
+    const id = this.currentUser.uid;
+    const filePath = 'user' + '/' + id + '.jpg';
+    const storageRef = this.storage.ref(filePath);
+    const meta = { contentType: 'image/jpg', cacheControl: 'private, max-age=15552000' };
+    const fileUploadTask = storageRef.putString(imageURL, 'data_url', meta);
+
+    fileUploadTask.then(snapshot => {
+      snapshot.ref.getDownloadURL().then(
+        url => {
+          this.updateUserData({ uid: id, photoURL: url});
+        }
+      );
+    });
+
+    return { percentageChanges: fileUploadTask, id };
   }
 }

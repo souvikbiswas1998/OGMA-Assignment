@@ -5,6 +5,7 @@ import { Chart } from 'chart.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
 import { isFutureTime, isPastTime, matchPassword } from 'src/app/functions/validators.functions';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-profile',
@@ -17,19 +18,24 @@ export class ProfileComponent implements OnInit, OnDestroy{
   // tslint:disable: variable-name
   private _user: any;
 
-  barChart;
-  levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  months;
+  private barChart;
+  private levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  public months;
 
-  from = '0';
+  public from = '0';
 
-  toMonth;
+  public toMonth;
 
-  chartData = {
+  private chartData = {
     dataSet1 : Array.from({ length: 8 }, () => Math.floor(Math.random() * 590) + 10)
   };
 
-  form: FormGroup;
+  public form: FormGroup;
+
+  public file: any;
+  public disable = false;
+
+  public percentageChanges = 0;
 
   constructor(private appService: AppService, private auth: AuthService) { }
 
@@ -192,6 +198,52 @@ export class ProfileComponent implements OnInit, OnDestroy{
       }
     })
       .catch((error) => { console.error(error); this.appService.openSnackBar(error.message, 'Dismiss'); });
+  }
+
+
+  // tslint:disable: member-ordering
+  private blob: string;
+
+  // tslint:disable-next-line: typedef
+  public onSelect(files: FileList) {
+    this.disable = true;
+    if (files && files.length > 0) {
+      this.file = files.item(0);
+      this.readFileAsURL(files.item(0))
+        .then(blob => {
+          this.blob = blob;
+          this.upload();
+        })
+        .catch(error => this.appService.openSnackBar('Error opening file: ' + error.message, ''));
+    }
+  }
+
+  private async readFileAsURL(file: File | Blob): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = event => resolve(event.target.result as any);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // tslint:disable-next-line: typedef
+  public upload() {
+    if (this.file.size > 10 * 1024 * 1024) {
+      this.appService.openSnackBar('Max limit is 10 mb', '');
+      return;
+    }
+    const x = this.auth.uploadThumbnail(this.blob);
+    this.disable = false;
+    x.percentageChanges.percentageChanges().subscribe((data: any) => {
+      this.percentageChanges = data;
+      if(this.percentageChanges === 100) this.appService.openSnackBar('Photo updated Successfully.')
+    });
+  }
+
+  public remove(): void {
+    delete this.profile.photoURL;
+    this.auth.updateUserData({ uid: this.profile.uid, photoURL: firebase.default.firestore.FieldValue.delete() as any })
   }
 }
 

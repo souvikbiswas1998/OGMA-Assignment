@@ -81,12 +81,17 @@ export class AuthService {
 
   async setUserData(user: User) {
     const x: User = this.setUser(user);
+    const date = new Date();
+    x.totalPoints = 0;
+    x.points = {
+      fromPoint: { year: date.getFullYear(), month: date.getMonth() },
+      points: []
+    };
     this.afs.collection(COLLECTION_NAME).doc(user.uid).set(x, { merge: true })
       .then(() => {
         const user1: User = { uid: user.uid };
         if (x.email) { user1.email = x.email; }
         if (x.name) { user1.name = x.name; }
-        user1.totalPoints = 0;
         this.afs.collection(environment.database.pui).doc(user.uid).set(user1, { merge: true });
       }).catch(error => { console.log(error); });
   }

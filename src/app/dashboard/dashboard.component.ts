@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { Post } from '../models/post';
+import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { PostService } from '../services/post.service';
 import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.component';
@@ -36,11 +38,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public isPagination: boolean = false;
 
+  public user: User;
+
   constructor(
     private authService: AuthService,
     private appService: AppService,
     private postService: PostService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnDestroy(): void {
@@ -50,7 +55,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._user = this.authService.user.subscribe((user) => this.isLogin = Boolean(user));
+    this._user = this.authService.isAnyUser.subscribe((val) => {
+      this.isLogin = Boolean(val);
+      if (this.isLogin) {
+        this.authService.getUserDataPromise(val.uid).then((data) => this.user = data);
+      }
+    });
     this._postsSubs = this.postService.getPosts().subscribe((posts) => {
       this._posts = posts;
       this.length = this._posts.length;
@@ -110,5 +120,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
     }
+  }
+
+  public login(): void {
+    this.router.navigate(['/login']);
   }
 }

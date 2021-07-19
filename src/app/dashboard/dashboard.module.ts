@@ -16,6 +16,8 @@ import { SharedModule } from '../shared/shared.module';
 import { HighlightPipe } from '../custom-pipes/highlight.pipe';
 import { SearchPipe } from '../custom-pipes/search.pipe';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { NgsavatarModule } from 'ngs-avatar';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     FormsModule, MatInputModule, ReactiveFormsModule,
     MatCardModule, MatIconModule, MatButtonModule, MatDialogModule,
     SharedModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgsavatarModule,
+    MatMenuModule
   ],
   providers: [ PostService ]
 })

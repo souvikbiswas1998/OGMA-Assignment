@@ -1,6 +1,5 @@
-<br />
 <div class="flex-row" style="flex-grow: 1; justify-content: space-between">
-  <mat-form-field appearance="outline" style="margin: 0 16px; margin-top: 24px; min-width: 512px">
+  <mat-form-field appearance="outline" style="margin-right: 16px; min-width: 512px">
     <mat-label style="margin-left: 8px; margin-top: 6px">Search</mat-label>
     <mat-icon class="icon" matPrefix>search</mat-icon>
     <input
@@ -12,12 +11,11 @@
       placeholder="Search"
     />
   </mat-form-field>
-  <button mat-button color="primary" *ngIf="isLogin" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-  </button>
-  <button mat-button color="primary" *ngIf="!isLogin" routerLink='/login'>
-    <mat-icon>login</mat-icon>
-  </button>
+  <ngs-avatar size = '36px' [name]="user?.name" style="margin-top: 10px; cursor: pointer;" (click)="isLogin ? menuTrigger.openMenu() : login()" #menuTrigger="matMenuTrigger"  [matMenuTriggerFor]="menu"></ngs-avatar>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/profile">My Profile</button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
 </div>
 
 searched term: {{ searchedTerm }}

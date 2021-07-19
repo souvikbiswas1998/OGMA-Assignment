@@ -1,3 +1,82 @@
+<form class="flex-col" [formGroup]="form" *ngIf="form">
+  <mat-form-field appearance="outline">
+      <mat-label style="margin-left:8px; margin-top: 6px;">First Name</mat-label>
+      <mat-icon class="icon" matPrefix>person</mat-icon>
+      <input matInput style="margin-left:8px" type="name" autocomplete="on" formControlName="firstName"
+          placeholder="First Name" required>
+          <mat-error *ngIf="form.get('firstName').hasError('required') && form.get('firstName').touched">ⓘ Please enter your
+              firstName – it's required
+          </mat-error>
+          <mat-error *ngIf="form.get('firstName').hasError('minlength') && !form.get('firstName').hasError('required')">
+              ⓘ Please enter firstName – it's too short
+          </mat-error>
+          <mat-error *ngIf="form.get('firstName').hasError('pattern') && !form.get('firstName').hasError('minlength')">
+              ⓘ Use of some special characters are restricted
+          </mat-error>
+          <mat-error *ngIf="form.get('firstName').hasError('maxlength') && !form.get('firstName').hasError('pattern')">
+              ⓘ Please enter a shorter name – it's too long
+          </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label style="margin-left:8px; margin-top: 6px;">Last Name</mat-label>
+      <mat-icon class="icon" matPrefix>person</mat-icon>
+      <input matInput style="margin-left:8px" type="name" autocomplete="on" formControlName="lastName"
+          placeholder="lastName" required>
+          <mat-error *ngIf="form.get('lastName').hasError('required') && form.get('lastName').touched">ⓘ Please enter your
+              lastName – it's required
+          </mat-error>
+          <mat-error *ngIf="form.get('lastName').hasError('minlength') && !form.get('lastName').hasError('required')">
+              ⓘ Please enter lastName – it's too short
+          </mat-error>
+          <mat-error *ngIf="form.get('lastName').hasError('pattern') && !form.get('lastName').hasError('minlength')">
+              ⓘ Use of some special characters are restricted
+          </mat-error>
+          <mat-error *ngIf="form.get('lastName').hasError('maxlength') && !form.get('lastName').hasError('pattern')">
+              ⓘ Please enter a shorter name – it's too long
+          </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label style="margin-left:8px; margin-top:8px;">Email</mat-label>
+      <mat-icon class="icon" matPrefix>email</mat-icon>
+      <input matInput style="margin-left:8px;" type="email" formControlName="email" placeholder="Enter Your Email"
+          autocomplete="on">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label style="margin-left:8px; margin-top: 6px;">Password</mat-label>
+      <mat-icon class="icon" matPrefix>lock</mat-icon>
+      <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="password"
+          placeholder="Password" required>
+      <mat-error *ngIf="form.get('password').hasError('required')">ⓘ Please set your new password –
+          it's required</mat-error>
+      <mat-error
+          *ngIf="form.get('password').hasError('minlength') && !form.get('password').hasError('required')">
+          ⓘ Please enter your password – it's too short</mat-error>
+      <mat-error
+          *ngIf="form.get('password').hasError('pattern') && !form.get('password').hasError('minlength')">
+          ⓘ Must contain 2 number, 1 Capital, 1 Small and a special character
+      </mat-error>
+      <mat-error
+          *ngIf="form.get('password').hasError('maxlength') && !form.get('password').hasError('pattern') ">
+          ⓘ Please enter a shorter password – it's too long</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label style="margin-left:8px; margin-top: 6px;">Repeat Password</mat-label>
+      <mat-icon class="icon" matPrefix>lock</mat-icon>
+      <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="repeatPassword"
+          placeholder="Repeat Password" required>
+      <mat-error *ngIf="form.get('repeatPassword').hasError('required')">ⓘ Please confirm your
+          password – it's required</mat-error>
+      <mat-error *ngIf="form.get('repeatPassword').hasError('notMatched')">ⓘ Passwords must match
+      </mat-error>
+  </mat-form-field>
+</form>
+
+<button style="width: 220px; margin-bottom: 12px; margin-top: 4px; background-color:#173b67; color: white;" mat-raised-button (click)="onsignUp()">Update</button>
+
 <div class="chart-diplayh">
   <div style="width: 60%; margin: auto">
     <canvas id="bar"></canvas>

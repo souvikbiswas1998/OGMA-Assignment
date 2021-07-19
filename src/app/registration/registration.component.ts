@@ -45,10 +45,10 @@ export class RegistrationComponent implements OnInit {
       email: userdata.email,
       password: userdata.password
     };
+    user.name = user.name.trim();
     this.authService.signUp(user).then(() => {
-      if (this.form.valid) {
-        this.appService.openSnackBar('User Registered Successfully', '');
-      }
+      this.appService.isFirstTime = true;
+      this.appService.openSnackBar('User Registered Successfully', '');
     })
       .catch((error) => { console.error(error); this.appService.openSnackBar(error.message, 'Dismiss'); });
   }

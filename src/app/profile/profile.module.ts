@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     CommonModule,
     ProfileRoutingModule,
     FormsModule, ReactiveFormsModule,
-    MatButtonModule, MatIconModule, MatFormFieldModule
+    MatButtonModule, MatIconModule, MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class ProfileModule { }

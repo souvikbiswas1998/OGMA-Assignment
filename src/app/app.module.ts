@@ -12,6 +12,8 @@ import { AuthService } from './services/auth.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -24,7 +26,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     AngularFirestoreModule.enablePersistence(), // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     AngularFireStorageModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

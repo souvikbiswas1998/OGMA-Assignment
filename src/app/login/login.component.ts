@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
       this.appService.openSnackBar('Please rectify the errors on the form.', '');
       return;
     }
-    this.authService.loginWithEmail(user.email, user.password).then(() => this.appService.openSnackBar('Login Successful', ''))
+    // tslint:disable-next-line: max-line-length
+    this.authService.loginWithEmail(user.email, user.password).then(() => { this.appService.openSnackBar('Login Successful', ''); this.appService.isFirstTime = true; })
       .catch((error) => { this.appService.openSnackBar(error.message, 'Dismiss'); });
   }
 

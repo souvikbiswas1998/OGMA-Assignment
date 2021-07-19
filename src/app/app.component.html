@@ -1,3 +1,12 @@
-<div style="margin: 16px;">
+<div style="margin: 16px;" [ngStyle]="{
+    display: show ? 'none' : 'block'
+}">
     <router-outlet></router-outlet>
+</div>
+
+<div class="flex-col" style="flex-grow: 1; height: 100vh; justify-content: center; align-items: center;" *ngIf="show">
+    <!-- <div> -->
+        <mat-spinner style="top: 50; right: 50;">Please Wait</mat-spinner>
+        <h1 style="margin-top: 16px;">Please Wait...</h1>
+    <!-- </div> -->
 </div>

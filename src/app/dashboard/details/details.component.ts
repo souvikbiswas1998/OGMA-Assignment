@@ -38,7 +38,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._user = this.authService.user.subscribe((user) => this.currentUser = user);
+    this._user = this.authService.user.subscribe((user) => { this.currentUser = user; this.appService.isFirstTime = false; });
     // this.currentUser = this.authService.currentUser;
     this.paramSubs = this.aRoute.params.subscribe(data => {
       this._postSubs = this.postService.getPost(data.id).subscribe(post => {

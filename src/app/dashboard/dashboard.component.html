@@ -11,8 +11,9 @@
       placeholder="Search"
     />
   </mat-form-field>
-  <ngs-avatar size = '36px' [name]="user?.name" style="margin-top: 10px; cursor: pointer;" (click)="isLogin ? menuTrigger.openMenu() : login()" #menuTrigger="matMenuTrigger"  [matMenuTriggerFor]="menu"></ngs-avatar>
-  <mat-menu #menu="matMenu">
+  <ngs-avatar size = '36px' [name]="user?.name" style="margin-top: 10px; cursor: pointer;" (click)="isLogin ? clickHoverMenuTrigger.openMenu() : login()"
+    [matMenuTriggerFor]="clickMenu" #clickMenuTrigger="matMenuTrigger"></ngs-avatar>
+  <mat-menu #clickMenu="matMenu">
     <button mat-menu-item routerLink="/profile">My Profile</button>
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>

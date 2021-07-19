@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
@@ -17,6 +18,7 @@ import { AddEditPostComponent } from '../shared/add-edit-post/add-edit-post.comp
 })
 // tslint:disable: no-inferrable-types
 export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChild(MatMenuTrigger) clickHoverMenuTrigger: MatMenuTrigger;
 
   public searchedTerm: string = '';
   public isLogin: boolean = false;
@@ -55,10 +57,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.appService.showSpinner = true;
     this._user = this.authService.isAnyUser.subscribe((val) => {
       this.isLogin = Boolean(val);
       if (this.isLogin) {
-        this.authService.getUserDataPromise(val.uid).then((data) => this.user = data);
+        // tslint:disable-next-line: max-line-length
+        this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.appService.showSpinner = false; this.appService.isFirstTime = false; });
       }
     });
     this._postsSubs = this.postService.getPosts().subscribe((posts) => {
@@ -67,6 +71,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.pageSize = 15;
       this.posts = this._posts.slice(0, this.pageSize);
       this.isPagination = true;
+      if (this.appService.isFirstTime){ setTimeout(() => {
+          this.appService.showSpinner = false;
+          this.appService.isFirstTime = false;
+        }, 3000);
+      } else { this.appService.showSpinner = false; }
     });
 
     this.pageEventSubject.subscribe(pageEvent => {
@@ -102,6 +111,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .then(() => {
         this.isLogin = false;
         this.appService.openSnackBar('Logged out successfully', 'Dismiss');
+        this.user = undefined;
+        this._user?.unsubscribe();
       });
   }
 
@@ -123,6 +134,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public login(): void {
+    this.clickHoverMenuTrigger.closeMenu();
     this.router.navigate(['/login']);
   }
 }

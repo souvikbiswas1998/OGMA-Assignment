@@ -2,6 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { Chart } from 'chart.js';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AppService } from 'src/app/app.service';
+import { isFutureTime, isPastTime, matchPassword } from 'src/app/functions/validators.functions';
 
 @Component({
   selector: 'app-profile',
@@ -26,25 +29,39 @@ export class ProfileComponent implements OnInit, OnDestroy{
     dataSet1 : Array.from({ length: 8 }, () => Math.floor(Math.random() * 590) + 10)
   };
 
-  constructor(private auth: AuthService) { }
+  form: FormGroup;
+
+  constructor(private appService: AppService, private auth: AuthService) { }
 
   ngOnDestroy(): void {
     this._user?.unsubscribe();
   }
 
   ngOnInit(): void {
-    if (this.auth.currentUser) { this.profile = this.auth.currentUser; }
-    else {
-      this._user = this.auth.isAnyUser.subscribe((val) => {
-        if (Boolean(val)) {
-          this.auth.getUserDataPromise(val.uid).then((data) => {
-            this.def();
-            this.abc();
-            this.profile = data;
+    this.appService.showSpinner = true;
+    this._user = this.auth.isAnyUser.subscribe((val) => {
+      if (Boolean(val)) {
+        this.auth.getUserDataPromise(val.uid).then((data) => {
+          this.def();
+          this.abc();
+          data.uid = val.uid;
+          this.profile = data;
+          const x = data.name.lastIndexOf(' ');
+          this.form = new FormGroup({
+            // tslint:disable: max-line-length
+            firstName: new FormControl(data.name.slice(0, x), [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
+            lastName: new FormControl(data.name.slice(x + 1), [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
+            email: new FormControl({value: data.email, disabled: true}),
+            password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16),
+            Validators.pattern('^(?=(?:[^0-9]*[0-9]){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}$'),
+            // Validators.pattern(this.regex),
+            Validators.required, matchPassword]),
+            repeatPassword: new FormControl('', [matchPassword, Validators.required])
           });
-        }
-      });
-    }
+          this.appService.showSpinner = false;
+        });
+      }
+    });
   }
   private def(): void {
     const x = GetStaticValue();
@@ -104,7 +121,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
 
   private getPoints(points: {month: number, point: number}[]): any {
     const x = [];
-    console.log(points);
     let y = points.shift();
     let length: number = points.length;
     let count = 0;
@@ -114,7 +130,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
         break;
       }
       if(y.month === i) {
-        console.log(y, i);
         x.push(y?.point || 0);
         if(points.length > 0) {
         y = points.shift();
@@ -157,6 +172,27 @@ export class ProfileComponent implements OnInit, OnDestroy{
     this.barChart.update();
   }
 
+  // tslint:disable: typedef
+  onsignUp() {
+    const userdata = this.form.value;
+    if (!this.form.valid) {
+      this.appService.openSnackBar('Please rectify the errors on the form.', '');
+      this.form.markAllAsTouched();
+      return;
+    }
+    const user: User = {
+      name: userdata.firstName + ' ' + userdata.lastName,
+      password: userdata.password,
+      uid: this.profile.uid
+    };
+    user.name = user.name.trim();
+    this.auth.updateUserData(user).then(() => {
+      if (this.form.valid) {
+        this.appService.openSnackBar('User Updated Successfully', '');
+      }
+    })
+      .catch((error) => { console.error(error); this.appService.openSnackBar(error.message, 'Dismiss'); });
+  }
 }
 
 // tslint:disable: no-trailing-whitespace

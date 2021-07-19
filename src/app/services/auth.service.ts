@@ -59,7 +59,6 @@ export class AuthService {
     await this.afAuth.signInWithEmailAndPassword(email, password)
       .then((fbUser) => {
         localStorage.setItem('email', email);
-        this.updateUserData({ uid: fbUser.user.uid });
         this.router.navigate(['/dashboard']);
       });
   }
@@ -83,11 +82,13 @@ export class AuthService {
         const user1: User = { uid: user.uid };
         if (x.email) { user1.email = x.email; }
         if (x.name) { user1.name = x.name; }
+        user1.totalPoints = 0;
         this.afs.collection(environment.database.pui).doc(user.uid).set(user1, { merge: true });
       }).catch(error => { console.log(error); });
   }
 
   async updateUserData(user: User) {
+    if (!this.currentUser.totalPoints && !user.totalPoints) { user.totalPoints = 0; this.currentUser.totalPoints = 0; }
     const uid = user.uid;
     delete user.uid;
     this.afs.collection(COLLECTION_NAME).doc(uid).update(user)

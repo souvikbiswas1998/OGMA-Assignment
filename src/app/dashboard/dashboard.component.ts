@@ -61,7 +61,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this._user = this.authService.isAnyUser.subscribe((val) => {
       this.isLogin = Boolean(val);
       if (this.isLogin) {
-        // tslint:disable-next-line: max-line-length
+        // tslint:disable: max-line-length
+        this.user = this.authService?.currentUser;
         this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.appService.showSpinner = false; this.appService.isFirstTime = false; });
       }
     });
@@ -124,6 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe((result: Post) => {
         // tslint:disable-next-line: no-unused-expression
         if (!result) { return; }
+        if (!result.thumbnail) { delete result.thumbnail; }
         result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
         .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));

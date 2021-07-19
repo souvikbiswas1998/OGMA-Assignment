@@ -4,6 +4,7 @@ export interface User {
     name?: string;
     dateOfBirth?: Date;
     password?: string;
+    totalPoints?: number;
     points?: { fromPoint: { year: number, month: number }, points: Point[] };
     photoURL?: string;
 }

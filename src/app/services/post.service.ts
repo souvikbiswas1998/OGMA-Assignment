@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +26,12 @@ export class PostService {
     fileUploadTask.then(snapshot => {
       snapshot.ref.getDownloadURL().then(
         url => {
-          const post: Post = {
-            // tslint:disable-next-line: object-literal-shorthand
-            id: id,
-            thumbnail: url
-          };
-          this.addEditPost(post);
+          // const post: Post = {
+          //   // tslint:disable-next-line: object-literal-shorthand
+          //   id: id,
+          //   thumbnail: url
+          // };
+          // this.addEditPost(post);
         }
       );
     });
@@ -39,8 +40,57 @@ export class PostService {
   }
 
   public addEditPost(post: Post): Promise<any> {
-    if (!post.id) {
+    if (!post.id || post.id === null) {
       post.id = this.afs.createId();
+      const date: Date = new Date();
+      let x = this.auth?.currentUser?.points;
+      let confirm1 = false;
+      let confirm2 = false;
+      if (x && x.points && x.points.length > 0) {
+        x.points.forEach(data => {
+          if (data.year === date.getFullYear()) {
+            confirm1 = true;
+            data.points.forEach(data2 => {
+              if (data2.month === date.getMonth()) {
+                data2.point += 5;
+                confirm2 = true;
+              }
+              return data2;
+            });
+          }
+          return data;
+        });
+      }
+      if (confirm1 === false) {
+        if (!x) {
+          x = {
+            fromPoint: { year: date.getFullYear(), month: date.getMonth() },
+            points: []
+          };
+        }
+        if (!x.points) { x.points = []; }
+        x.points.push({
+          year: date.getFullYear(),
+          points: [{
+            month: date.getMonth(),
+            point: 5
+          }]
+        });
+      }
+      else if (confirm2 === false) {
+        x.points.forEach(data => {
+          if (data.year === date.getFullYear()) {
+            if (!data.points) { data.points = []; }
+            data.points.push({
+              month: date.getMonth(),
+              point: 5
+            });
+          }
+        });
+      }
+      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: firebase.default.firestore.FieldValue.increment(5) as any,
+      points: x
+      });
     }
     post.author = this.auth?.currentUser?.name || 'no name';
     post.authorId = this.auth?.currentUser?.uid || 'no uid';
@@ -48,6 +98,8 @@ export class PostService {
 
     return this.afs.collection(environment.database.posts).doc(post.id).set(post, { merge: true });
   }
+
+
 
   // tslint:disable: member-ordering
   // tslint:disable-next-line: variable-name

@@ -23,6 +23,7 @@ export class AddEditPostComponent implements OnInit {
   public disable: boolean = false;
 
   public percentageChanges: number = 0;
+  url: any;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPostComponent>,
@@ -46,7 +47,7 @@ export class AddEditPostComponent implements OnInit {
 
   public submit(): void {
     if (this.form.valid) {
-      this.dialogRef.close({...this.form.value, id: this.id ? this.id : null});
+      this.dialogRef.close({...this.form.value, id: this.id ? this.id : null, thumbnail: this.url});
     } else {
       this.form.markAllAsTouched();
       this.appService.openSnackBar('Check the errors.', '');
@@ -86,8 +87,15 @@ export class AddEditPostComponent implements OnInit {
       return;
     }
     const x = this.postService.uploadThumbnail(this.blob);
-    this.id = x.id;
+    // this.id = x.id;
     this.disable = false;
+    x.percentageChanges.then(snapshot => {
+      snapshot.ref.getDownloadURL().then(
+        url => {
+          this.url = url;
+        }
+      );
+    });
     x.percentageChanges.percentageChanges().subscribe((data: any) => this.percentageChanges = data);
   }
 }

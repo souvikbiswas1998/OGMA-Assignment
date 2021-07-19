@@ -4,8 +4,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Chart } from 'chart.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AppService } from 'src/app/app.service';
-import { isFutureTime, isPastTime, matchPassword } from 'src/app/functions/validators.functions';
-import * as firebase from 'firebase';
+import { matchPassword } from 'src/app/functions/validators.functions';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   public toMonth;
 
   private chartData = {
-    dataSet1 : Array.from({ length: 8 }, () => Math.floor(Math.random() * 590) + 10)
+    dataSet1 : []
   };
 
   public form: FormGroup;
@@ -48,10 +50,10 @@ export class ProfileComponent implements OnInit, OnDestroy{
     this._user = this.auth.isAnyUser.subscribe((val) => {
       if (Boolean(val)) {
         this.auth.getUserDataPromise(val.uid).then((data) => {
-          this.def();
-          this.abc();
           data.uid = val.uid;
           this.profile = data;
+          this.def();
+          this.abc();
           const x = data.name.lastIndexOf(' ');
           this.form = new FormGroup({
             // tslint:disable: max-line-length
@@ -70,28 +72,44 @@ export class ProfileComponent implements OnInit, OnDestroy{
     });
   }
   private def(): void {
-    const x = GetStaticValue();
+    const x = this.profile?.points;
     const y = this.levelsArr;
+    const date = new Date();
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    const date2 = new Date(x?.fromPoint?.year, x?.fromPoint?.month, 1);
     this.levelsArr = [];
-    this.levelsArr = this.getYearMonth(x.from.month, x.from.year, 'after');
-    for (let i = x.from.year + 1; i < 2021; i++) {
-      this.levelsArr.push(...y.map(m => m + ' ' + i));
+    if (!x) { return; }
+    if (+date === +date2) {
+      const shortMonth = date.toLocaleString('en-us', { month: 'short' });
+      this.levelsArr.push(shortMonth + ' ' + x.fromPoint.year);
+    } else if (date.getFullYear() === x.fromPoint.year) {
+      this.levelsArr.push(...this.getYearMonth(x.fromPoint.month, x.fromPoint.year, 'between', date.getMonth()));
+    } else {
+      this.levelsArr = this.getYearMonth(x.fromPoint.month, x.fromPoint.year, 'after');
+      for (let i = x.fromPoint.year + 1; i < 2021; i++) {
+        this.levelsArr.push(...y.map(m => m + ' ' + i));
+      }
+      this.levelsArr.push(...this.getYearMonth(date.getMonth(), date.getFullYear(), 'before'));
     }
-    this.levelsArr.push(...this.getYearMonth(6, 2021, 'before'));
     let z = 0;
 
     this.months = this.levelsArr.map(m => {const ab =  {month: m, value: z}; z++; return ab; }) as any;
     this.toMonth = this.months.length - 1;
     const data: any[] = [];
-    // tslint:disable-next-line: no-shadowed-variable
-    x.points.forEach(data2 => {
-      data.push(...this.getPoints(data2.points));
-    });
+    if (+date === +date2) {
+      data.push((x.points && x.points[0].points && x.points[0].points[0].point) ? x.points[0].points[0].point : 0);
+    } else {
+      // tslint:disable: no-shadowed-variable
+      x.points.forEach(data2 => {
+        data.push(...this.getPoints(data2.points, x.fromPoint.month));
+      });
+    }
     this.chartData.dataSet1 = data;
   }
 
-  private getYearMonth(month: number, year: number, arg2: string): string[] {
-    const x = [];
+  private getYearMonth(month: number, year: number, arg2: string, toMonth?: number): string[] {
+    let x = [];
     if (arg2 === 'before') {
       // tslint:disable: whitespace
       // tslint:disable: curly
@@ -122,15 +140,31 @@ export class ProfileComponent implements OnInit, OnDestroy{
       if (month < 2) x.unshift('Feb '+year);
       if (month < 1) x.unshift('Jan '+year);
     }
+
+    if (arg2 === 'between') {
+      if (toMonth > -1) x.push('Jan '+year);
+      if (toMonth > 0) x.push('Feb '+year);
+      if (toMonth > 1) x.push('Mar '+year);
+      if (toMonth > 2) x.push('Apr '+year);
+      if (toMonth > 3) x.push('May '+year);
+      if (toMonth > 4) x.push('Jun '+year);
+      if (toMonth > 5) x.push('Jul '+year);
+      if (toMonth > 6) x.push('Aug '+year);
+      if (toMonth > 7) x.push('Sep '+year);
+      if (toMonth > 8) x.push('Oct '+year);
+      if (toMonth > 9) x.push('Nov '+year);
+      if (toMonth > 10) x.push('Dec '+year);
+      x = x.slice(month--);
+    }
     return x;
   }
 
-  private getPoints(points: {month: number, point: number}[]): any {
+  private getPoints(points: {month: number, point: number}[], from: number = 0): any {
     const x = [];
     let y = points.shift();
     let length: number = points.length;
     let count = 0;
-    for (let i = 0; i < 12; i++) {
+    for (let i = from; i < 12; i++) {
       if(count > 3) {
         x.push(0);
         break;
@@ -192,6 +226,8 @@ export class ProfileComponent implements OnInit, OnDestroy{
       uid: this.profile.uid
     };
     user.name = user.name.trim();
+    this.auth.resetPassword(user.password);
+    delete user.password;
     this.auth.updateUserData(user).then(() => {
       if (this.form.valid) {
         this.appService.openSnackBar('User Updated Successfully', '');
@@ -237,13 +273,13 @@ export class ProfileComponent implements OnInit, OnDestroy{
     this.disable = false;
     x.percentageChanges.percentageChanges().subscribe((data: any) => {
       this.percentageChanges = data;
-      if(this.percentageChanges === 100) this.appService.openSnackBar('Photo updated Successfully.')
+      if(this.percentageChanges === 100) this.appService.openSnackBar('Photo updated Successfully.');
     });
   }
 
   public remove(): void {
     delete this.profile.photoURL;
-    this.auth.updateUserData({ uid: this.profile.uid, photoURL: firebase.default.firestore.FieldValue.delete() as any })
+    this.auth.updateUserData({ uid: this.profile.uid, photoURL: firebase.firestore.FieldValue.delete() as any });
   }
 }
 

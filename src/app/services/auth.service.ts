@@ -63,6 +63,10 @@ export class AuthService {
       });
   }
 
+  public resetPassword(password: string) {
+    this.afAuth.authState.pipe(takeUntil(this.ngUnsubscribe)).subscribe(data => data.updatePassword(password));
+  }
+
   async SignOut() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

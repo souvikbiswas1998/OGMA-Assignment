@@ -6,7 +6,8 @@ import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -88,7 +89,7 @@ export class PostService {
           }
         });
       }
-      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: firebase.default.firestore.FieldValue.increment(5) as any,
+      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: firebase.firestore.FieldValue.increment(5) as any,
       points: x
       });
     }

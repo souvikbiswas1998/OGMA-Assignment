@@ -1,24 +1,28 @@
 <br />
-<mat-form-field appearance="outline" style="margin: 16px; min-width: 512px">
-  <mat-label style="margin-left: 8px; margin-top: 6px">Search</mat-label>
-  <mat-icon class="icon" matPrefix>search</mat-icon>
-  <input
-    matInput
-    [(ngModel)]="searchedTerm"
-    style="margin-left: 8px"
-    type="text"
-    autocomplete="on"
-    placeholder="Search"
-  />
-</mat-form-field>
-searched term: {{ searchedTerm }}
-<div style="align-content: start; display: flex; flex-direction: row-reverse">
+<div class="flex-row" style="flex-grow: 1; justify-content: space-between">
+  <mat-form-field appearance="outline" style="margin: 0 16px; margin-top: 24px; min-width: 512px">
+    <mat-label style="margin-left: 8px; margin-top: 6px">Search</mat-label>
+    <mat-icon class="icon" matPrefix>search</mat-icon>
+    <input
+      matInput
+      [(ngModel)]="searchedTerm"
+      style="margin-left: 8px"
+      type="text"
+      autocomplete="on"
+      placeholder="Search"
+    />
+  </mat-form-field>
   <button mat-button color="primary" *ngIf="isLogin" (click)="logout()">
     <mat-icon>logout</mat-icon>
   </button>
   <button mat-button color="primary" *ngIf="!isLogin" routerLink='/login'>
     <mat-icon>login</mat-icon>
   </button>
+</div>
+
+searched term: {{ searchedTerm }}
+
+<div style="align-content: start; display: flex; flex-direction: row-reverse">
   <button mat-button color="primary" (click)="openDialog()" onclick="blur()">
     <mat-icon>add</mat-icon>
   </button>
@@ -27,13 +31,6 @@ searched term: {{ searchedTerm }}
   </button>
 </div>
 <br />
-
-<mat-paginator [length]="length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="pageEventSubject.next($event)"
-               *ngIf="isPagination">
-</mat-paginator>
 
 <mat-grid-list cols="4" rowHeight="2:1">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
@@ -46,3 +43,9 @@ searched term: {{ searchedTerm }}
   </mat-grid-tile>
 </mat-grid-list>
 
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEventSubject.next($event)"
+               *ngIf="isPagination">
+</mat-paginator>

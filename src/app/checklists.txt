@@ -5,10 +5,10 @@ You must show top 5 users with posts points. E.g. In the db 15 users register cr
 @@@Pagination button should bottom centered
 
 Post
-When creating a post user should receive 5points. Two posts 10 points, three posts 15points.
+@@@When creating a post user should receive 5points. Two posts 10 points, three posts 15points.
 If should be able delete his/her posts. On delete deduct -5 points. (Reverse of post add).
 User can also send the post to trash. After 15/30days post will be deleted automatically. (Check firebase cloud functions) 
-Clicking a post should redirect to post details where I can see post clearly.
+@@@Clicking a post should redirect to post details where I can see post clearly.
 
 Profile
 @@@Create a profile route and on that page logged in user can see edit his/her details.

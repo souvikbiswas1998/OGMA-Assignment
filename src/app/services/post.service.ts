@@ -127,7 +127,7 @@ export class PostService {
     return this.afs.collection(environment.database.posts).doc(id).valueChanges();
   }
 
-  public deletePost(id: string): any {
+  public deletePost(id: string): Promise<void> {
     const date: Date = new Date();
     const x = this.auth?.currentUser?.points;
     let y = this.auth?.currentUser?.totalPoints;

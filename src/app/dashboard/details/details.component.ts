@@ -68,4 +68,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
     }
   }
+
+  public delete(): void {
+    if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
+      this.postService.deletePost(this.post.id).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'))
+    } else {
+      this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
+    }
+  }
 }

@@ -38,6 +38,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   public disable = false;
 
   public percentageChanges = 0;
+  public test = false;
 
   constructor(private appService: AppService, private auth: AuthService) { }
 
@@ -53,7 +54,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
           data.uid = val.uid;
           this.profile = data;
           this.def();
-          this.abc();
           const x = data.name.lastIndexOf(' ');
           this.form = new FormGroup({
             // tslint:disable: max-line-length
@@ -71,8 +71,8 @@ export class ProfileComponent implements OnInit, OnDestroy{
       }
     });
   }
-  private def(): void {
-    const x = this.profile?.points;
+  public def(): void {
+    const x = (this.test) ? GetStaticValue() : this.profile?.points;
     const y = this.levelsArr;
     const date = new Date();
     date.setDate(1);
@@ -106,6 +106,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
       });
     }
     this.chartData.dataSet1 = data;
+    this.abc();
   }
 
   private getYearMonth(month: number, year: number, arg2: string, toMonth?: number): string[] {
@@ -286,7 +287,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
 // tslint:disable: no-trailing-whitespace
 // tslint:disable-next-line: typedef
 function GetStaticValue() {
-  const x = { from: {year: 2019, month: 1},
+  const x = { fromPoint: {year: 2019, month: 1},
               points: [
                 {year: 2019, points: [
                   {month: 6, point: 10},

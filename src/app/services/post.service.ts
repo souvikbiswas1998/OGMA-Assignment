@@ -126,4 +126,29 @@ export class PostService {
   public getPost(id: string): Observable<Post> {
     return this.afs.collection(environment.database.posts).doc(id).valueChanges();
   }
+
+  public deletePost(id: string): any {
+    const date: Date = new Date();
+    const x = this.auth?.currentUser?.points;
+    let y = this.auth?.currentUser?.totalPoints;
+    if (x && x.points && x.points.length > 0) {
+      x.points.forEach(data => {
+        if (data.year === date.getFullYear()) {
+          data.points.forEach(data2 => {
+            if (data2.month === date.getMonth()) {
+              data2.point -= 5;
+              y -= 5;
+              if (y < 0) { y = 0; }
+            }
+            return data2;
+          });
+        }
+        return data;
+      });
+      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: firebase.firestore.FieldValue.increment(5) as any,
+        points: x
+      });
+    }
+    return this.afs.collection(environment.database.posts).doc(id).delete();
+  }
 }

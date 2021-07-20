@@ -20,7 +20,6 @@
   </mat-menu>
 </div>
 
-
 <div class="flex-row" style="flex-grow: 1; justify-content: space-between">
   <p style="margin: 0 !important;margin-top: 8px !important;">searched term: {{ searchedTerm }}</p>
   <button mat-button color="primary" (click)="openDialog()" onclick="blur()">
@@ -28,6 +27,10 @@
   </button>
 </div>
 <br />
+
+<div>
+  <h3>Here are the top Users (max 5)</h3>
+</div>
 
 <mat-grid-list cols="4" rowHeight="2:2">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">

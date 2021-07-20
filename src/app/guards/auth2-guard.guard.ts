@@ -8,7 +8,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardGuard implements CanActivate {
+export class Auth2GuardGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router, private appService: AppService) { }
 
@@ -18,13 +18,12 @@ export class AuthGuardGuard implements CanActivate {
       return this.authService.user.pipe(first(), map(auth => {
         const uid = auth ? auth.uid : null;
         route.data = { ...route.parent.data, ...route.data, uid};
-        if (Boolean(uid)) {
-          console.error('Valid uid. Routing to Dashboard');
-          this.router.navigate(['/dashboard']);
-          this.appService.openSnackBar('Already logged in. Routing to Dashboard');
+        if (!Boolean(uid)) {
+          console.error('Not a Valid uid. Routing to Login');
+          this.router.navigate(['/login']);
+          this.appService.openSnackBar('Not a Valid uid. Routing to Login');
         }
-        return !Boolean(uid);
+        return Boolean(uid);
       }));
   }
-
 }

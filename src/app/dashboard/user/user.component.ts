@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
 import { Post } from 'src/app/models/post';
@@ -32,7 +32,7 @@ export class UserComponent implements OnInit, OnDestroy {
   _posts: Post[];
 
   // tslint:disable-next-line: max-line-length
-  constructor(private appService: AppService, private postService: PostService, private aRoute: ActivatedRoute) { }
+  constructor(private appService: AppService, private postService: PostService, private aRoute: ActivatedRoute, private router: Router) { }
 
   ngOnDestroy(): void {
     this._postsSubs?.unsubscribe();
@@ -44,6 +44,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.appService.showSpinner = true;
     this.paramSubs = this.aRoute.params.subscribe(data => {
       this.postService.getPostByUser(data.id).then((posts) => {
+        if (!posts || posts.length === 0) { this.router.navigate(['/pages/404']); this.appService.openSnackBar('No Post Found or User Not Valid'); }
         this._posts = posts;
         this.length = this._posts.length;
         this.pageSize = 15;

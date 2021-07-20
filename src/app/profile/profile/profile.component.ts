@@ -118,7 +118,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
         else {this.years.push({year: data1, min: i, max: i}); index++; }
       }
     } else { this.years.push({year: this.levelsArr[0].slice(4), min: 0, max: 0}); }
-    console.log(this.years);
 
     this.months = this.levelsArr.map(m => {const ab =  {month: m, value: z}; z++; return ab; }) as any;
     this.toMonth = this.months.length - 1;

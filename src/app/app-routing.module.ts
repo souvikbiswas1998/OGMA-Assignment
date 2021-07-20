@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Auth2GuardGuard } from './guards/auth2-guard.guard';
 import { AuthGuardGuard } from './guards/auth-guard.guard';
 // tslint:disable: max-line-length
 
@@ -9,7 +10,7 @@ const routes: Routes = [
   { path: 'registration', canActivate: [AuthGuardGuard], loadChildren: () => import('./registration/registration.module').then(m => m.RegistrationModule) },
   { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
-  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
+  { path: 'profile', canActivate: [Auth2GuardGuard], loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
   { path: '**', redirectTo: 'pages' }
 ];
 

@@ -43,9 +43,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
     // this.currentUser = this.authService.currentUser;
     this.paramSubs = this.aRoute.params.subscribe(data => {
       this._postSubs = this.postService.getPost(data.id).subscribe(post => {
+        if (!post) { this.router.navigate(['/pages/404']); this.appService.openSnackBar('No Post Found'); }
         this.post = post;
       });
-    });
+    }, (err) => {console.log(err); });
   }
 
   // tslint:disable-next-line: typedef

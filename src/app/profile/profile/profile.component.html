@@ -88,7 +88,12 @@
 <div class="chart-diplayh">
   <button mat-raised-button (click)="test = !test; def()">Test</button>
   <div style="width: 60%; margin: auto">
-    <canvas id="bar"></canvas>
+    <canvas id="bar" [ngStyle]="{
+      display: (test) ? 'none' : 'block'
+    }"></canvas>
+    <canvas id="bar1" [ngStyle]="{
+      display: (!test) ? 'none' : 'block'
+    }"></canvas>
 
     <div style="margin-left: auto">
       <select [(ngModel)]="from" style="width: 150px; height: 30px">
@@ -105,6 +110,24 @@
       </select>
       <button mat-raised-button (click)="applyDateFilter()" style="margin-left:32px">
         Apply Date Filter
+      </button>
+    </div>
+
+    <div style="margin-left: auto">
+      <select [(ngModel)]="fromYear" style="width: 150px; height: 30px">
+        <option *ngFor="let m of years" [value]="m.min">
+          {{ m.year }}
+        </option>
+      </select>
+      &nbsp;&nbsp;
+
+      <select [(ngModel)]="toYear" style="width: 150px; height: 30px">
+        <option *ngFor="let m1 of years" [value]="m1.max">
+          {{ m1.year }}
+        </option>
+      </select>
+      <button mat-raised-button (click)="applyYearFilter()" style="margin-left:32px">
+        Apply Year Filter
       </button>
     </div>
 

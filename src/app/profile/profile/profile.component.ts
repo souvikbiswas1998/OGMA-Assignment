@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   private _user: any;
 
   private barChart;
-  private levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   public months;
 
   public from = '0';
@@ -39,6 +39,9 @@ export class ProfileComponent implements OnInit, OnDestroy{
 
   public percentageChanges = 0;
   public test = false;
+  years: any[];
+  fromYear = '0';
+  toYear: string;
 
   constructor(private appService: AppService, private auth: AuthService) { }
 
@@ -72,7 +75,17 @@ export class ProfileComponent implements OnInit, OnDestroy{
     });
   }
   public def(): void {
+    this.months = [];
+    this.levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    this.from = '0';
+    this.fromYear = '0';
+    this.toMonth = undefined;
+    this.toYear = undefined;
+    this.chartData = {
+      dataSet1 : []
+    };
     const x = (this.test) ? GetStaticValue() : this.profile?.points;
+    // const x = GetStaticValue();
     const y = this.levelsArr;
     const date = new Date();
     date.setDate(1);
@@ -93,9 +106,23 @@ export class ProfileComponent implements OnInit, OnDestroy{
       this.levelsArr.push(...this.getYearMonth(date.getMonth(), date.getFullYear(), 'before'));
     }
     let z = 0;
+    this.years = [];
+    if (this.levelsArr.length > 1) {
+      let index = 0;
+      this.years.push({year: this.levelsArr[0].slice(4), min: 0, max: 0});
+      for (let i = 1; i < this.levelsArr.length; i++)
+      {
+        const data1 = this.levelsArr[i].slice(4);
+        const data2 = this.levelsArr[i - 1].slice(4);
+        if (data1 === data2) { this.years[index].max += 1; }
+        else {this.years.push({year: data1, min: i, max: i}); index++; }
+      }
+    } else { this.years.push({year: this.levelsArr[0].slice(4), min: 0, max: 0}); }
+    console.log(this.years);
 
     this.months = this.levelsArr.map(m => {const ab =  {month: m, value: z}; z++; return ab; }) as any;
     this.toMonth = this.months.length - 1;
+    this.toYear = this.months[this.months.length - 1].value;
     const data: any[] = [];
     if (+date === +date2) {
       data.push((x.points && x.points[0].points && x.points[0].points[0].point) ? x.points[0].points[0].point : 0);
@@ -182,7 +209,33 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
   private abc(): void {
-    this.barChart = new Chart('bar', {
+    delete this.barChart;
+    if(this.test) {
+      this.barChart = new Chart('bar1', {
+        type: 'bar',
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Your Points',
+          },
+        },
+        data: {
+          labels: this.levelsArr,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Point',
+              data: this.chartData.dataSet1,
+              backgroundColor: 'blue',
+              borderColor: 'blue',
+              fill: false,
+            }
+          ]
+        }
+      });
+    }
+    else this.barChart = new Chart('bar', {
       type: 'bar',
       options: {
         responsive: true,
@@ -210,6 +263,12 @@ export class ProfileComponent implements OnInit, OnDestroy{
   applyDateFilter(): void{
     // tslint:disable-next-line: radix
     this.barChart.data.labels = this.levelsArr.slice(parseInt(this.from), parseInt(this.toMonth) + 1);
+    this.barChart.update();
+  }
+
+  applyYearFilter(): void{
+    // tslint:disable-next-line: radix
+    this.barChart.data.labels = this.levelsArr.slice(parseInt(this.fromYear), parseInt(this.toYear) + 1);
     this.barChart.update();
   }
 

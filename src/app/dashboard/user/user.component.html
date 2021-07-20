@@ -1,1 +1,43 @@
-<p>user works!</p>
+<div class="flex-row" style="flex-grow: 1; justify-content: space-between">
+    <mat-form-field appearance="outline" style="margin-right: 16px; min-width: 512px">
+      <mat-label style="margin-left: 8px; margin-top: 6px">Search</mat-label>
+      <mat-icon class="icon" matPrefix>search</mat-icon>
+      <input
+        matInput
+        [(ngModel)]="searchedTerm"
+        style="margin-left: 8px"
+        type="text"
+        autocomplete="on"
+        placeholder="Search"
+      />
+    </mat-form-field>
+</div>
+
+
+<h3>Posts</h3>
+<mat-grid-list cols="4" rowHeight="2:2">
+  <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
+    <mat-card style="cursor: pointer; min-height: 66%; max-height:67%; min-width: 66%; max-width:67%;" [routerLink]="post.id">
+      <mat-card-header class="flex-col" style="height: 64px; overflow: hidden;">
+        <div mat-card-avatar style="background-size: cover;">
+          <ngs-avatar size = '36px' [photoUrl]="post?.authorURL" [name]="post?.author"></ngs-avatar>
+        </div>
+        <mat-card-subtitle [innerHTML]="post?.title | highlight: searchedTerm"></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="flex-col" style="flex-grow: 1;">
+        <img
+          mat-card-image
+          [src]="post?.thumbnail"
+          alt="Photo not found"
+        />
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEventSubject.next($event)"
+               *ngIf="isPagination">
+</mat-paginator>

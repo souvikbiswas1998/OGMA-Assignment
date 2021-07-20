@@ -14,7 +14,7 @@ export class SearchPipe implements PipeTransform {
 
     searchText = searchText.toLowerCase();
     const x = list.filter( item => {
-        return item.title.toLowerCase().includes(searchText);
+        return item?.title?.toLowerCase()?.includes(searchText);
     });
     if (!x || x.length === 0) {
         this.appService.openSnackBar('No Data Found');

@@ -171,7 +171,7 @@ export class AuthService {
           const user = {...(doc1.data() as User), uid: doc1.id};
           delete user.dateOfBirth;
           delete user.password;
-          users.push(user);
+          if (user.totalPoints > 0) { users.push(user); }
         }
       });
       return users;

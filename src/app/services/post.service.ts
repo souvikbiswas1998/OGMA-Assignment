@@ -13,6 +13,24 @@ import 'firebase/firestore';
   providedIn: 'root'
 })
 export class PostService {
+  // tslint:disable: member-ordering
+  // tslint:disable-next-line: variable-name
+  public getPostByUser(uid: string): Promise<Post[]> {
+    return this.afs.collection(environment.database.posts, ref => {
+      return ref.where('authorId', '==', uid);
+    }).get({ source: 'server' }).toPromise()
+    .then(doc => {
+      const users: Post[] = [];
+      doc.forEach(doc1 => {
+        if (doc1.exists) {
+          const user = {...(doc1.data() as Post)};
+          users.push(user);
+        }
+      });
+      users.sort((a, b) => +b.time - +a.time );
+      return users;
+    });
+  }
 
   constructor(private storage: AngularFireStorage, private afs: AngularFirestore, private auth: AuthService) { }
 

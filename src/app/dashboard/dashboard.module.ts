@@ -18,12 +18,13 @@ import { SearchPipe } from '../custom-pipes/search.pipe';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgsavatarModule } from 'ngs-avatar';
 import { MatMenuModule } from '@angular/material/menu';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     DetailsComponent,
-    SearchPipe, HighlightPipe
+    SearchPipe, HighlightPipe, UserComponent
   ],
   imports: [
     CommonModule,

@@ -28,10 +28,23 @@
 </div>
 <br />
 
-<div>
-  <h3>Here are the top Users (max 5)</h3>
+<h3>Here are the top Users (max 5)</h3>
+<div class="flex-row" style="overflow: auto;">
+  <mat-card style="cursor: pointer; min-width: 196px;" [routerLink]="'user/' + topUser.uid" *ngFor="let topUser of topUsers">
+    <mat-card-header class="flex-col" style="height: 48px; overflow: hidden;">
+      <div mat-card-avatar style="background-size: cover;">
+        <ngs-avatar size = '36px' [photoUrl]="topUser?.photoURL" [name]="topUser.name"></ngs-avatar>
+      </div>
+      <mat-card-title style="font-size: medium;">{{topUser.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="flex-col" style="flex-grow: 1;">
+      Total Points: {{topUser.totalPoints}}
+    </mat-card-content>
+  </mat-card>
 </div>
 
+<br />
+<h3>Posts</h3>
 <mat-grid-list cols="4" rowHeight="2:2">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
     <mat-card style="cursor: pointer; min-height: 66%; max-height:67%; min-width: 66%; max-width:67%;" [routerLink]="post.id">

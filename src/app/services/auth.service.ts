@@ -159,4 +159,22 @@ export class AuthService {
 
     return { percentageChanges: fileUploadTask, id };
   }
+
+  public getTopUser(): Promise<User[]> {
+    return this.afs.collection(COLLECTION_NAME, ref => {
+      return ref.where('totalPoints', '>', 0).orderBy('totalPoints', 'desc').limit(5);
+    }).get({ source: 'server' }).toPromise()
+    .then(doc => {
+      const users: User[] = [];
+      doc.forEach(doc1 => {
+        if (doc1.exists) {
+          const user = {...(doc1.data() as User), uid: doc1.id};
+          delete user.dateOfBirth;
+          delete user.password;
+          users.push(user);
+        }
+      });
+      return users;
+    });
+  }
 }

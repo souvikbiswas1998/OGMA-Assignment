@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public isPagination: boolean = false;
 
   public user: User;
+  topUsers: User[];
 
   constructor(
     private authService: AuthService,
@@ -65,6 +66,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.user = this.authService?.currentUser;
         this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.appService.showSpinner = false; this.appService.isFirstTime = false; });
       }
+    });
+    this.authService.getTopUser().then((data) => {
+      this.topUsers = data;
     });
     this._postsSubs = this.postService.getPosts().subscribe((posts) => {
       this._posts = posts;

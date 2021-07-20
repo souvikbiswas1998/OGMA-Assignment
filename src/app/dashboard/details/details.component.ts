@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
 import { Post } from 'src/app/models/post';
@@ -28,7 +28,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private appService: AppService,
     private postService: PostService,
     public dialog: MatDialog,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnDestroy(): void {
@@ -71,7 +72,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   public delete(): void {
     if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
-      this.postService.deletePost(this.post.id).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'))
+      this.postService.deletePost(this.post.id).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'));
+      this.router.navigate(['/dashboard']);
     } else {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
     }

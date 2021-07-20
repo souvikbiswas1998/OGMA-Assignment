@@ -145,7 +145,7 @@ export class PostService {
         }
         return data;
       });
-      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: firebase.firestore.FieldValue.increment(5) as any,
+      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: y,
         points: x
       });
     }

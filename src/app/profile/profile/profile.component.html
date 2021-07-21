@@ -1,6 +1,6 @@
 <h1>Your Profile</h1>
 
-<form class="flex-col" [formGroup]="form" *ngIf="form">
+<form class="flex-col" [formGroup]="form" style="margin-bottom: 24px;" *ngIf="form">
   <mat-form-field appearance="outline">
       <mat-label style="margin-left:8px; margin-top: 6px;">First Name</mat-label>
       <mat-icon class="icon" matPrefix>person</mat-icon>
@@ -48,10 +48,13 @@
 
   <div>
     <img height="128px" [src]="profile?.photoURL" alt="No image available"/>
-    <button mat-button (click)="remove()" *ngIf="profile?.photoURL">Remove</button>
+    <button mat-button (click)="remove()" *ngIf="profile?.photoURL" [disabled]="disable">Remove</button>
   </div>
   <input id="file" type="file" accept="image/jpeg" (change)="onSelect($event.target.files)" style="margin-top: 16px;" *ngIf="form">
-  <mat-progress-bar mode="determinate" style="margin: 24px 0; height: 20px;" [value]="percentageChanges" *ngIf="!data?.post"></mat-progress-bar>
+  <div class="flex-row" style="margin: 24px 0; height: 20px;" *ngIf="imgUpload">
+    <mat-progress-bar mode="determinate" style="height: 20px;" [value]="percentageChanges"></mat-progress-bar>
+    <h3 style="margin-left: 24px; line-height: 20px;">{{percentageChanges | number: '1.0-2'}}%</h3>
+  </div>
 
 </form>
 <button mat-raised-button (click)="openDialog()" onclick="blur()" style="margin-right: 32px;">Update Password</button>

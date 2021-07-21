@@ -8,7 +8,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { User } from '../models/user';
 import { environment } from 'src/environments/environment';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
   // tslint:disable: typedef
   // tslint:disable: variable-name
 
@@ -141,7 +141,7 @@ export class AuthService {
       .toPromise();
   }
 
-  public uploadThumbnail(imageURL: string): any {
+  public uploadThumbnail(imageURL: string): {percentageChanges: AngularFireUploadTask, id: string} {
     if (!imageURL) { throw new Error('Invalid Parameters'); }
     const id = this.currentUser.uid;
     const filePath = 'user' + '/' + id + '.jpg';
@@ -201,5 +201,9 @@ export class AuthService {
       const credentials = firebase.auth.EmailAuthProvider.credential(user.email, password);
       return user.reauthenticateWithCredential(credentials);
     });
+  }
+
+  public deleteStorage(mImageUrl: string): Observable<any> {
+    return this.storage.refFromURL(mImageUrl).delete();
   }
 }

@@ -304,7 +304,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
     }
     const user: User = {
       name: userdata.firstName + ' ' + userdata.lastName,
-      password: userdata.password,
       uid: this.profile.uid
     };
     user.name = user.name.trim();
@@ -319,6 +318,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
 
   // tslint:disable: member-ordering
   private blob: string;
+  public imgUpload = false;
 
   // tslint:disable-next-line: typedef
   public onSelect(files: FileList) {
@@ -327,6 +327,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
       this.file = files.item(0);
       this.readFileAsURL(files.item(0))
         .then(blob => {
+          this.imgUpload = true;
           this.blob = blob;
           this.upload();
         })
@@ -349,8 +350,12 @@ export class ProfileComponent implements OnInit, OnDestroy{
       this.appService.openSnackBar('Max limit is 10 mb', '');
       return;
     }
+    this.profile.photoURL = this.blob;
     const x = this.auth.uploadThumbnail(this.blob);
-    this.disable = false;
+    x.percentageChanges.then(snapshot => {
+      snapshot.ref.getDownloadURL().then(url => { this.profile.photoURL = url; this.disable = false;
+      });
+    });
     x.percentageChanges.percentageChanges().subscribe((data: any) => {
       this.percentageChanges = data;
       if(this.percentageChanges === 100) this.appService.openSnackBar('Photo updated Successfully.');
@@ -358,8 +363,11 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
   public remove(): void {
+    this.auth.deleteStorage(this.profile.photoURL);
+    this.imgUpload = false;
     delete this.profile.photoURL;
     this.auth.updateUserData({ uid: this.profile.uid, photoURL: firebase.firestore.FieldValue.delete() as any });
+    this.appService.openSnackBar('Photo removed successfully.');
   }
 }
 

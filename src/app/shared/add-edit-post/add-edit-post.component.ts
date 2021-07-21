@@ -17,13 +17,14 @@ export class AddEditPostComponent implements OnInit {
     privacy: new FormControl('', [Validators.required]),
     content: new FormControl('', [Validators.minLength(100), Validators.maxLength(500), Validators.required]),
   });
-  public file: any;
+  public file: File;
   public id: any;
   // tslint:disable: no-inferrable-types
   public disable: boolean = false;
 
   public percentageChanges: number = 0;
   url: any;
+  public imgUpload = false;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPostComponent>,
@@ -42,6 +43,7 @@ export class AddEditPostComponent implements OnInit {
   }
 
   public onNoClick(): void {
+    if (this.url) { this.postService.deleteStorage(this.url); }
     this.dialogRef.close();
   }
 
@@ -56,14 +58,19 @@ export class AddEditPostComponent implements OnInit {
 
   // tslint:disable: member-ordering
   private blob: string;
+  private isFirstType = true;
 
   // tslint:disable-next-line: typedef
   public onSelect(files: FileList) {
-    this.disable = true;
     if (files && files.length > 0) {
       this.file = files.item(0);
+      console.log(this.file.type);
+      if (this.isFirstType && this.url) { this.postService.deleteStorage(this.url); this.url = undefined; }
+      this.isFirstType = true;
       this.readFileAsURL(files.item(0))
-        .then(blob => {
+      .then(blob => {
+          this.disable = true;
+          this.imgUpload = true;
           this.blob = blob;
           this.upload();
         })
@@ -88,11 +95,11 @@ export class AddEditPostComponent implements OnInit {
     }
     const x = this.postService.uploadThumbnail(this.blob);
     // this.id = x.id;
-    this.disable = false;
     x.percentageChanges.then(snapshot => {
       snapshot.ref.getDownloadURL().then(
         url => {
           this.url = url;
+          this.disable = false;
         }
       );
     });

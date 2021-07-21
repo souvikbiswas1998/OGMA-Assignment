@@ -89,7 +89,7 @@ export class PostService {
 
   public addEditPost(post: Post, isTrash: boolean = false): Promise<any> {
     if (!post.id || post.id === null || isTrash === true) {
-      if(!post.id || post.id === null) { post.id = this.afs.createId(); }
+      if (!post.id || post.id === null) { post.id = this.afs.createId(); }
       const date: Date = new Date();
       let x = this.auth?.currentUser?.points;
       let confirm1 = false;
@@ -163,7 +163,7 @@ export class PostService {
           // post.time = (<any>post.time).toDate();
           post2.id = change.payload.doc.id;
           if (!post2?.isTrash) { post2.isTrash = false; }
-          if (post2.isTrashDate && +post2.isTrashDate === +(new Date())) { this.deletePost(post2.id, post2.isTrash); }
+          if (post2.isTrashDate && +post2.isTrashDate === +(new Date())) { this.deletePost(post2.id, post2?.thumbnail, post2.isTrash); }
           if (change.type === 'added') { this._posts.splice(change.payload.newIndex, 0, post2); }
           else { this._posts[change.payload.newIndex] = post2; }
         } else if (change.type === 'removed') { this._posts.splice(change.payload.oldIndex, 1); }
@@ -176,7 +176,7 @@ export class PostService {
     return this.afs.collection(environment.database.posts).doc(id).valueChanges();
   }
 
-  public deletePost(id: string, isTrash: boolean): Promise<void> {
+  public deletePost(id: string, url: string = null, isTrash: boolean): Promise<void> {
     const date: Date = new Date();
     const x = this.auth?.currentUser?.points;
     let y = this.auth?.currentUser?.totalPoints;
@@ -199,6 +199,12 @@ export class PostService {
         points: x
       });
     }
+    if (url && url !== null) { this.deleteStorage(url); }
     return this.afs.collection(environment.database.posts).doc(id).delete();
+  }
+
+
+  public deleteStorage(mImageUrl: string): Observable<any> {
+    return this.storage.refFromURL(mImageUrl).delete();
   }
 }

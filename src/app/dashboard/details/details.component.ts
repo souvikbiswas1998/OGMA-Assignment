@@ -75,7 +75,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   public delete(): void {
     if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
-      this.postService.deletePost(this.post.id, this.post.isTrash).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'));
+      this.postService.deletePost(this.post.id, this.post?.thumbnail, this.post.isTrash).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'));
       this.router.navigate(['/dashboard']);
     } else {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');

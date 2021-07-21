@@ -63,6 +63,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe((result: Post) => {
         // tslint:disable-next-line: no-unused-expression
         if (!result) { return; }
+        if (!result.thumbnail) { delete result.thumbnail; }
         result.id = this.post.id;
         result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))

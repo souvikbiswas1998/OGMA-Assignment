@@ -137,6 +137,9 @@ export class ProfileComponent implements OnInit, OnDestroy{
     const data: any[] = [];
     if (+date === +date2) {
       data.push((x.points && x.points[0].points && x.points[0].points[0].point) ? x.points[0].points[0].point : 0);
+    } else if (date.getFullYear() === date2.getFullYear()) {
+      const xyz = x.points[0] ? this.getPoints(x.points[0].points, x.fromPoint.month, date.getMonth() + 1) : null;
+      if (xyz) { data.push(...xyz); }
     } else {
       const x2 = x.points.shift();
       const x3 = x.points.pop();
@@ -146,7 +149,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
       x.points.forEach(data2 => {
         data.push(...this.getPoints(data2.points));
       });
-      const xyz = this.getPoints(x3.points, 0, date.getMonth() + 1);
+      const xyz = x3 ? this.getPoints(x3.points, 0, date.getMonth() + 1) : null;
       if (xyz) { data.push(...xyz); }
     }
     this.chartData.dataSet1 = data;

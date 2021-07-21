@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   private levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   public months;
 
-  public from = '0';
+  public from = 0;
 
   public toMonth;
 
@@ -40,8 +40,8 @@ export class ProfileComponent implements OnInit, OnDestroy{
   public percentageChanges = 0;
   public test = false;
   years: any[];
-  fromYear = '0';
-  toYear: string;
+  fromYear = 0;
+  toYear: number;
 
   constructor(private appService: AppService, private auth: AuthService) { }
 
@@ -77,8 +77,8 @@ export class ProfileComponent implements OnInit, OnDestroy{
   public def(): void {
     this.months = [];
     this.levelsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    this.from = '0';
-    this.fromYear = '0';
+    this.from = 0;
+    this.fromYear = 0;
     this.toMonth = undefined;
     this.toYear = undefined;
     this.chartData = {
@@ -126,10 +126,16 @@ export class ProfileComponent implements OnInit, OnDestroy{
     if (+date === +date2) {
       data.push((x.points && x.points[0].points && x.points[0].points[0].point) ? x.points[0].points[0].point : 0);
     } else {
+      const x2 = x.points.shift();
+      const x3 = x.points.pop();
+      const abc = this.getPoints(x2.points, x.fromPoint.month);
+      if (abc) { data.push(...abc); }
       // tslint:disable: no-shadowed-variable
       x.points.forEach(data2 => {
-        data.push(...this.getPoints(data2.points, x.fromPoint.month));
+        data.push(...this.getPoints(data2.points));
       });
+      const xyz = this.getPoints(x3.points, 0, date.getMonth() + 1);
+      if (xyz) { data.push(...xyz); }
     }
     this.chartData.dataSet1 = data;
     this.abc();
@@ -186,16 +192,16 @@ export class ProfileComponent implements OnInit, OnDestroy{
     return x;
   }
 
-  private getPoints(points: {month: number, point: number}[], from: number = 0): any {
+  private getPoints(points: {month: number, point: number}[], from: number = 0, to: number = 12): any {
     const x = [];
     let y = points.shift();
     let length: number = points.length;
     let count = 0;
-    for (let i = from; i < 12; i++) {
+    for (let i = from; i < to; i++) {
       if(count > 3) {
         x.push(0);
-        break;
-      }
+        // return;
+      } else
       if(y.month === i) {
         x.push(y?.point || 0);
         if(points.length > 0) {
@@ -208,7 +214,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
   private abc(): void {
-    delete this.barChart;
+    // delete this.barChart;
     if(this.test) {
       this.barChart = new Chart('bar1', {
         type: 'bar',
@@ -260,14 +266,19 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
   applyDateFilter(): void{
-    // tslint:disable-next-line: radix
-    this.barChart.data.labels = this.levelsArr.slice(parseInt(this.from), parseInt(this.toMonth) + 1);
+    // tslint:disable: radix
+    this.from = parseInt(this.from as any);
+    this.toMonth = parseInt(this.toMonth as any);
+    this.barChart.data.labels = this.levelsArr.slice(this.from, this.toMonth + 1);
+    this.barChart.data.datasets[0].data = this.chartData.dataSet1.slice(this.from, this.toMonth + 1);
     this.barChart.update();
   }
 
   applyYearFilter(): void{
-    // tslint:disable-next-line: radix
-    this.barChart.data.labels = this.levelsArr.slice(parseInt(this.fromYear), parseInt(this.toYear) + 1);
+    this.fromYear = parseInt(this.fromYear as any);
+    this.toYear = parseInt(this.toYear as any);
+    this.barChart.data.labels = this.levelsArr.slice(this.fromYear, this.toYear + 1);
+    this.barChart.data.datasets[0].data = this.chartData.dataSet1.slice(this.fromYear, this.toYear + 1);
     this.barChart.update();
   }
 
@@ -349,20 +360,21 @@ function GetStaticValue() {
               points: [
                 {year: 2019, points: [
                   {month: 6, point: 10},
-                  {month: 7, point: 10},
-                  {month: 8, point: 10},
-                  {month: 9, point: 10}
+                  {month: 7, point: 20},
+                  {month: 8, point: 15},
+                  {month: 9, point: 30}
                 ]},
                 {year: 2020, points: [
                   {month: 2, point: 10},
-                  {month: 4, point: 10},
-                  {month: 7, point: 10},
-                  {month: 10, point: 10},
-                  {month: 11, point: 10}
+                  {month: 4, point: 15},
+                  {month: 7, point: 25},
+                  {month: 10, point: 30},
+                  {month: 11, point: 20}
                 ]},
                 {year: 2021, points: [
                   {month: 2, point: 10},
-                  {month: 3, point: 10}
+                  {month: 3, point: 20},
+                  {month: 5, point: 20}
                 ]}
               ]
             };

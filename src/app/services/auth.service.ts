@@ -160,21 +160,38 @@ export class AuthService {
     return { percentageChanges: fileUploadTask, id };
   }
 
-  public getTopUser(): Promise<User[]> {
+  // tslint:disable-next-line: variable-name
+  // tslint:disable-next-line: member-ordering
+  private _users: User[] = [];
+  public getTopUser(): Observable<User[]> {
+    this._users = [];
     return this.afs.collection(COLLECTION_NAME, ref => {
       return ref.where('totalPoints', '>', 0).orderBy('totalPoints', 'desc').limit(5);
-    }).get({ source: 'server' }).toPromise()
-    .then(doc => {
-      const users: User[] = [];
-      doc.forEach(doc1 => {
-        if (doc1.exists) {
-          const user = {...(doc1.data() as User), uid: doc1.id};
+    }).stateChanges().pipe(map(changes => {
+      changes.forEach(change => {
+        if (['added', 'modified'].includes(change.type)) {
+          const user: User = change.payload.doc.data();
+          user.uid = change.payload.doc.id;
           delete user.dateOfBirth;
           delete user.password;
-          if (user.totalPoints > 0) { users.push(user); }
-        }
+          if (change.type === 'added') { this._users.splice(change.payload.newIndex, 0, user); }
+          else { this._users[change.payload.newIndex] = user; }
+        } else if (change.type === 'removed') { this._users.splice(change.payload.oldIndex, 1); }
       });
-      return users;
-    });
+      return this._users;
+    }));
+    // .toPromise()
+    // .then(doc => {
+    //   const users: User[] = [];
+    //   doc.forEach(doc1 => {
+    //     if (doc1.exists) {
+    //       const user = {...(doc1.data() as User), uid: doc1.id};
+    //       delete user.dateOfBirth;
+    //       delete user.password;
+    //       if (user.totalPoints > 0) { users.push(user); }
+    //     }
+    //   });
+    //   return users;
+    // });
   }
 }

@@ -42,6 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public user: User;
   topUsers: User[];
+  private _topUsers: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this._postsSubs?.unsubscribe();
     this.pageEventSubject?.unsubscribe();
     this._user?.unsubscribe();
+    this._topUsers?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -67,7 +69,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.appService.showSpinner = false; this.appService.isFirstTime = false; });
       }
     });
-    this.authService.getTopUser().then((data) => {
+    this._topUsers = this.authService.getTopUser().subscribe((data) => {
+      this.topUsers = [];
       this.topUsers = data;
     });
     this._postsSubs = this.postService.getPosts().subscribe((posts) => {
@@ -131,6 +134,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!result) { return; }
         if (!result.thumbnail) { delete result.thumbnail; }
         result.time = new Date();
+        this.user.totalPoints += 5;
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
         .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));
       });

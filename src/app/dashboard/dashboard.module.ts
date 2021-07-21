@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgsavatarModule } from 'ngs-avatar';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserComponent } from './user/user.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { UserComponent } from './user/user.component';
     SharedModule,
     MatPaginatorModule,
     NgsavatarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTooltipModule
   ],
   providers: [ PostService ]
 })

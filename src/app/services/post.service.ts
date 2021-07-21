@@ -13,6 +13,35 @@ import 'firebase/firestore';
   providedIn: 'root'
 })
 export class PostService {
+
+  public trashPost(id: string): Promise<void> {
+    const date: Date = new Date();
+    const x = this.auth?.currentUser?.points;
+    let y = this.auth?.currentUser?.totalPoints;
+    if (x && x.points && x.points.length > 0) {
+      x.points.forEach(data => {
+        if (data.year === date.getFullYear()) {
+          data.points.forEach(data2 => {
+            if (data2.month === date.getMonth()) {
+              data2.point -= 5;
+              y -= 5;
+              if (y < 0) { y = 0; }
+            }
+            return data2;
+          });
+        }
+        return data;
+      });
+      this.auth.updateUserData({uid: this.auth?.currentUser?.uid, totalPoints: y,
+        points: x
+      });
+    }
+    date.setMonth(date.getMonth() + 1);
+    return this.afs.collection(environment.database.posts).doc(id).update({
+      isTrash: true,
+      isTrashDate: date
+    });
+  }
   // tslint:disable: member-ordering
   // tslint:disable-next-line: variable-name
   public getPostByUser(uid: string): Promise<Post[]> {
@@ -58,9 +87,9 @@ export class PostService {
     return { percentageChanges: fileUploadTask, id };
   }
 
-  public addEditPost(post: Post): Promise<any> {
-    if (!post.id || post.id === null) {
-      post.id = this.afs.createId();
+  public addEditPost(post: Post, isTrash: boolean = false): Promise<any> {
+    if (!post.id || post.id === null || isTrash === true) {
+      if(!post.id || post.id === null) { post.id = this.afs.createId(); }
       const date: Date = new Date();
       let x = this.auth?.currentUser?.points;
       let confirm1 = false;
@@ -133,6 +162,8 @@ export class PostService {
           const post2: Post = change.payload.doc.data();
           // post.time = (<any>post.time).toDate();
           post2.id = change.payload.doc.id;
+          if (!post2?.isTrash) { post2.isTrash = false; }
+          if (post2.isTrashDate && +post2.isTrashDate === +(new Date())) { this.deletePost(post2.id, post2.isTrash); }
           if (change.type === 'added') { this._posts.splice(change.payload.newIndex, 0, post2); }
           else { this._posts[change.payload.newIndex] = post2; }
         } else if (change.type === 'removed') { this._posts.splice(change.payload.oldIndex, 1); }
@@ -145,11 +176,11 @@ export class PostService {
     return this.afs.collection(environment.database.posts).doc(id).valueChanges();
   }
 
-  public deletePost(id: string): Promise<void> {
+  public deletePost(id: string, isTrash: boolean): Promise<void> {
     const date: Date = new Date();
     const x = this.auth?.currentUser?.points;
     let y = this.auth?.currentUser?.totalPoints;
-    if (x && x.points && x.points.length > 0) {
+    if (!isTrash && x && x.points && x.points.length > 0) {
       x.points.forEach(data => {
         if (data.year === date.getFullYear()) {
           data.points.forEach(data2 => {
@@ -157,6 +188,7 @@ export class PostService {
               data2.point -= 5;
               y -= 5;
               if (y < 0) { y = 0; }
+              if (data2.point < 0) { data2.point = 0; }
             }
             return data2;
           });

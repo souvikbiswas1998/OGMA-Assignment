@@ -8,4 +8,6 @@ export interface Post {
     authorURL?: string;
     time?: Date;
     authorId?: string;
+    isTrash?: boolean;
+    isTrashDate?: Date;
 }

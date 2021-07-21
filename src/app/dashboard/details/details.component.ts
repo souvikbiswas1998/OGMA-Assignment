@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { AppService } from 'src/app/app.service';
 import { Post } from 'src/app/models/post';
@@ -73,8 +75,31 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   public delete(): void {
     if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
-      this.postService.deletePost(this.post.id).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'));
+      this.postService.deletePost(this.post.id, this.post.isTrash).then(() => this.appService.openSnackBar('Post deleted successfully.', 'Dismiss'));
       this.router.navigate(['/dashboard']);
+    } else {
+      this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
+    }
+  }
+
+  public trash(): void {
+    if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
+      this.postService.trashPost(this.post.id).then(() => this.appService.openSnackBar('Post will be deleted after 30 days.', 'Dismiss'));
+    } else {
+      this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
+    }
+  }
+
+  public removeTrash(): void {
+    if (this.authService.currentUser && this.authService.currentUser.uid === this.post.authorId) {
+      this.postService.addEditPost({
+        id: this.post.id,
+        isTrash: false,
+        isTrashDate: firebase.firestore.FieldValue.delete() as any
+      }, this.post.isTrash).then(() => {
+        this.appService.openSnackBar('Post reuploaded.', 'Dismiss');
+        this.post.isTrash = false;
+      });
     } else {
       this.appService.openSnackBar('You have to logged in first.', 'Dismiss');
     }

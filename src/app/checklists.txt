@@ -7,7 +7,7 @@ Dashboard
 Post
 @@@When creating a post user should receive 5points. Two posts 10 points, three posts 15points.
 @@@If should be able delete his/her posts. On delete deduct -5 points. (Reverse of post add).
-User can also send the post to trash. After 15/30days post will be deleted automatically. (Check firebase cloud functions) 
+@@@User can also send the post to trash. After 15/30days post will be deleted automatically. (Check firebase cloud functions) 
 @@@Clicking a post should redirect to post details where I can see post clearly.
 
 Profile

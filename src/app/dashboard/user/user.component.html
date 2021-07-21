@@ -17,7 +17,7 @@
 <h3>Posts</h3>
 <mat-grid-list cols="4" rowHeight="2:2">
   <mat-grid-tile *ngFor="let post of posts | search: searchedTerm">
-    <mat-card style="cursor: pointer; min-height: 66%; max-height:67%; min-width: 66%; max-width:67%;" [routerLink]="post.id">
+    <mat-card style="cursor: pointer; min-height: 66%; max-height:67%; min-width: 66%; max-width:67%;" [routerLink]="'/dashboard/'+post.id">
       <mat-card-header class="flex-col" style="height: 64px; overflow: hidden;">
         <div mat-card-avatar style="background-size: cover;">
           <ngs-avatar size = '36px' [photoUrl]="post?.authorURL" [name]="post?.author"></ngs-avatar>

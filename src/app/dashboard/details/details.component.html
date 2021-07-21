@@ -1,4 +1,4 @@
-<div style="height: 95vh; width: 100vw">
+<div class="flex-row" style="flex-grow: 1; justify-content: space-between; height: 95vh; width: 95vw">
   <mat-card class="example-card" *ngIf="post">
     <mat-card-header>
       <div mat-card-avatar style="background-size: cover;">
@@ -6,16 +6,19 @@
       </div>
       <mat-card-title>{{post.title}}</mat-card-title>
       <mat-card-subtitle>{{post.author || 'no name'}}</mat-card-subtitle>
-      <button mat-button><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'vpn_lock' : post.privacy}}</mat-icon></button>
-      <button mat-button (click)="edit()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid"><mat-icon>edit</mat-icon></button>
-      <button mat-button (click)="delete()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid"><mat-icon>delete</mat-icon></button>
+      <button mat-button [matTooltip]="post.privacy === '0' ? 'public' : post.privacy === '1' ? 'private' : post.privacy"><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'vpn_lock' : post.privacy}}</mat-icon></button>
+      <button mat-button (click)="edit()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid" matTooltip="Edit post"><mat-icon>edit</mat-icon></button>
+      <button mat-button (click)="delete()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid" matTooltip="Delete post"><mat-icon>delete</mat-icon></button>
+      <button mat-button (click)="trash()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid && !post?.isTrash" matTooltip="Move to trash"><mat-icon>archive</mat-icon></button>
+      <button mat-button (click)="removeTrash()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid && post?.isTrash" matTooltip="Move from trash"><mat-icon>unarchive</mat-icon></button>
     </mat-card-header>
-    <img
+    <h3 *ngIf="post?.isTrash" style="margin: 16px 0; color: red;">It will be deleted on {{(post?.isTrashDate?.toDate() | date:'MMMM d, y') + ' at ' + (post?.isTrashDate?.toDate() | date:'HH:mm') || post?.isTrashDate}}</h3>
+    <img style="font-size: large; max-height: 60vh; width: auto; max-width:100%; padding: 16px;"
       mat-card-image
       [src]="post?.thumbnail"
-      alt="Photo of a Shiba Inu"
+      alt="Photo Not Available"
     />
-    <mat-card-content>
+    <mat-card-content style="margin-top: 16px;">
       <p>{{post.content}}</p>
     </mat-card-content>
     <!-- <mat-card-actions>

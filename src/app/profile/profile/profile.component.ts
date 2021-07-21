@@ -320,11 +320,12 @@ export class ProfileComponent implements OnInit, OnDestroy{
   private blob: string;
   public imgUpload = false;
 
-  // tslint:disable-next-line: typedef
+  // tslint:disable: typedef
   public onSelect(files: FileList) {
     this.disable = true;
     if (files && files.length > 0) {
       this.file = files.item(0);
+      if (this.file.type !== 'image/jpeg') { this.appService.openSnackBar('Only JPEG images are supported.'); return; }
       this.readFileAsURL(files.item(0))
         .then(blob => {
           this.imgUpload = true;
@@ -344,7 +345,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
     });
   }
 
-  // tslint:disable-next-line: typedef
   public upload() {
     if (this.file.size > 10 * 1024 * 1024) {
       this.appService.openSnackBar('Max limit is 10 mb', '');

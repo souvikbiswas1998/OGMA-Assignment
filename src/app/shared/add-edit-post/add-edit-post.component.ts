@@ -64,7 +64,7 @@ export class AddEditPostComponent implements OnInit {
   public onSelect(files: FileList) {
     if (files && files.length > 0) {
       this.file = files.item(0);
-      console.log(this.file.type);
+      if (this.file.type !== 'image/jpeg') { this.appService.openSnackBar('Only JPEG images are supported.'); return; }
       if (this.isFirstType && this.url) { this.postService.deleteStorage(this.url); this.url = undefined; }
       this.isFirstType = true;
       this.readFileAsURL(files.item(0))

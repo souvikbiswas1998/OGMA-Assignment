@@ -65,10 +65,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.isLogin = Boolean(val);
       if (this.isLogin) {
         // tslint:disable: max-line-length
-        this.user = this.authService?.currentUser;
-        this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.appService.showSpinner = false; this.appService.isFirstTime = false; });
-      }
+        this.authService.getUserDataPromise(val.uid).then((data) => { this.user = data; this.def(); this.appService.isFirstTime = false; });
+      } else { this.def(); }
     });
+  }
+  private def(): void {
     this._topUsers = this.authService.getTopUser().subscribe((data) => {
       this.topUsers = [];
       this.topUsers = data;
@@ -79,11 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.pageSize = 15;
       this.posts = this._posts.slice(0, this.pageSize);
       this.isPagination = true;
-      if (this.appService.isFirstTime){ setTimeout(() => {
-          this.appService.showSpinner = false;
-          this.appService.isFirstTime = false;
-        }, 3000);
-      } else { this.appService.showSpinner = false; }
+      this.appService.showSpinner = false;
+      this.appService.isFirstTime = false;
     });
 
     this.pageEventSubject.subscribe(pageEvent => {

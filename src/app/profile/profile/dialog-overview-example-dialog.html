@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>Hi {{data.name}}</h1>
+<div mat-dialog-content *ngIf="form2">
+    <form class="flex-col" [formGroup]="form2">
+        <mat-form-field appearance="outline">
+            <mat-label style="margin-left:8px; margin-top: 6px;">Current Password</mat-label>
+            <mat-icon class="icon" matPrefix>lock</mat-icon>
+            <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="oldPassword"
+                placeholder="Current Password" required>
+            <mat-error *ngIf="form2.get('oldPassword').hasError('required')">ⓘ Please enter your password – it's
+                required</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline">
+          <mat-label style="margin-left:8px; margin-top: 6px;">New Password</mat-label>
+          <mat-icon class="icon" matPrefix>lock</mat-icon>
+          <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="password"
+              placeholder="Password" required>
+          <mat-error *ngIf="form2.get('password').hasError('required')">ⓘ Please set your new password –
+              it's required</mat-error>
+          <mat-error
+              *ngIf="form2.get('password').hasError('minlength') && !form2.get('password').hasError('required')">
+              ⓘ Please enter your password – it's too short</mat-error>
+          <mat-error
+              *ngIf="form2.get('password').hasError('pattern') && !form2.get('password').hasError('minlength')">
+              ⓘ Must contain 2 number, 1 Capital, 1 Small and a special character
+          </mat-error>
+          <mat-error
+              *ngIf="form2.get('password').hasError('maxlength') && !form2.get('password').hasError('pattern') ">
+              ⓘ Please enter a shorter password – it's too long</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline">
+            <mat-label style="margin-left:8px; margin-top: 6px;">Repeat Password</mat-label>
+            <mat-icon class="icon" matPrefix>lock</mat-icon>
+            <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="repeatPassword"
+                placeholder="Repeat Password" required>
+            <mat-error *ngIf="form2.get('repeatPassword').hasError('required')">ⓘ Please confirm your
+                password – it's required</mat-error>
+            <mat-error *ngIf="form2.get('repeatPassword').hasError('notMatched')">ⓘ Passwords must match
+            </mat-error>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="closeDialog()">Update</button>
+  <!-- cdkFocusInitial -->
+</div>

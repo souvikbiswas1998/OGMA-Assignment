@@ -44,36 +44,6 @@
           autocomplete="on">
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
-      <mat-label style="margin-left:8px; margin-top: 6px;">Password</mat-label>
-      <mat-icon class="icon" matPrefix>lock</mat-icon>
-      <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="password"
-          placeholder="Password" required>
-      <mat-error *ngIf="form.get('password').hasError('required')">ⓘ Please set your new password –
-          it's required</mat-error>
-      <mat-error
-          *ngIf="form.get('password').hasError('minlength') && !form.get('password').hasError('required')">
-          ⓘ Please enter your password – it's too short</mat-error>
-      <mat-error
-          *ngIf="form.get('password').hasError('pattern') && !form.get('password').hasError('minlength')">
-          ⓘ Must contain 2 number, 1 Capital, 1 Small and a special character
-      </mat-error>
-      <mat-error
-          *ngIf="form.get('password').hasError('maxlength') && !form.get('password').hasError('pattern') ">
-          ⓘ Please enter a shorter password – it's too long</mat-error>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-      <mat-label style="margin-left:8px; margin-top: 6px;">Repeat Password</mat-label>
-      <mat-icon class="icon" matPrefix>lock</mat-icon>
-      <input matInput style="margin-left:8px" type="password" autocomplete="off" formControlName="repeatPassword"
-          placeholder="Repeat Password" required>
-      <mat-error *ngIf="form.get('repeatPassword').hasError('required')">ⓘ Please confirm your
-          password – it's required</mat-error>
-      <mat-error *ngIf="form.get('repeatPassword').hasError('notMatched')">ⓘ Passwords must match
-      </mat-error>
-  </mat-form-field>
-
   <div>
     <img height="128px" [src]="profile?.photoURL" alt="No image available"/>
     <button mat-button (click)="remove()" *ngIf="profile?.photoURL">Remove</button>
@@ -82,10 +52,10 @@
   <mat-progress-bar mode="determinate" style="margin-top: 24px; height: 20px;" [value]="percentageChanges" *ngIf="!data?.post"></mat-progress-bar>
 
 </form>
-
+<button mat-raised-button (click)="openDialog()" onclick="blur()" style="margin-right: 32px;">Update Password</button>
 <button style="width: 220px; margin-bottom: 12px; margin-top: 4px; background-color:#173b67; color: white;" mat-raised-button (click)="onsignUp()">Update</button>
 
-<div class="chart-diplayh">
+<div>
   <button mat-raised-button (click)="test = !test; def()">Test</button>
   <div style="width: 60%; margin: auto">
     <canvas id="bar" [ngStyle]="{

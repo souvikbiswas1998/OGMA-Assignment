@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { Chart } from 'chart.js';
@@ -7,6 +7,7 @@ import { AppService } from 'src/app/app.service';
 import { matchPassword } from 'src/app/functions/validators.functions';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
@@ -43,7 +44,23 @@ export class ProfileComponent implements OnInit, OnDestroy{
   fromYear = 0;
   toYear: number;
 
-  constructor(private appService: AppService, private auth: AuthService) { }
+  constructor(private appService: AppService, private auth: AuthService, public dialog: MatDialog) { }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '400px',
+      data: { name: this.profile.name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.auth.reauthenticate(result.oldPassword).then(() => {
+          this.auth.resetPassword(result.password);
+          this.appService.openSnackBar('Password updated successfully.', '');
+        }).catch(() => this.appService.openSnackBar('Wrong Password or Internal Error.', ''));
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this._user?.unsubscribe();
@@ -63,11 +80,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
             firstName: new FormControl(data.name.slice(0, x), [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
             lastName: new FormControl(data.name.slice(x + 1), [Validators.minLength(5), Validators.maxLength(50), Validators.pattern('^[A-Za-z\ \.\']*$'), Validators.required]),
             email: new FormControl({value: data.email, disabled: true}),
-            password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16),
-            Validators.pattern('^(?=(?:[^0-9]*[0-9]){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}$'),
-            // Validators.pattern(this.regex),
-            Validators.required, matchPassword]),
-            repeatPassword: new FormControl('', [matchPassword, Validators.required])
           });
           this.appService.showSpinner = false;
         });
@@ -296,8 +308,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
       uid: this.profile.uid
     };
     user.name = user.name.trim();
-    this.auth.resetPassword(user.password);
-    delete user.password;
     this.auth.updateUserData(user).then(() => {
       if (this.form.valid) {
         this.appService.openSnackBar('User Updated Successfully', '');
@@ -392,3 +402,42 @@ function GetStaticValue() {
   //   chart.data.datasets[dataSetIndex].data = data;
   //   chart.update();
   // }
+
+@Component({
+  // tslint:disable-next-line: component-selector
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: 'dialog-overview-example-dialog.html',
+})
+// tslint:disable-next-line: component-class-suffix
+export class DialogOverviewExampleDialog {
+  public form2: FormGroup;
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>, @Inject(MAT_DIALOG_DATA) public data, private appService: AppService) {
+      this.form2 = new FormGroup({
+        password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16),
+          Validators.pattern('^(?=(?:[^0-9]*[0-9]){2})(?=.*[A-Z])(?=.*[A-Z])[a-zA-Z0-9](?=.*[#$^+=!*()@%&]).{8,16}$'),
+          // Validators.pattern(this.regex),
+          Validators.required, matchPassword]),
+        repeatPassword: new FormControl('', [matchPassword, Validators.required]),
+        oldPassword: new FormControl('', [matchPassword, Validators.required])
+      });
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  closeDialog() {
+    if (!this.form2.valid) {
+      this.appService.openSnackBar('Please rectify the errors on the form.', '');
+      this.form2.markAllAsTouched();
+      return;
+    }
+    if (this.form2.value.oldPassword === this.form2.value.password) {
+      this.appService.openSnackBar('Old and new password is same.', '');
+      return;
+    }
+    this.dialogRef.close(this.form2.value);
+  }
+}

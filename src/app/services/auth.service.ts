@@ -194,4 +194,13 @@ export class AuthService {
     //   return users;
     // });
   }
+
+  async reauthenticate(password: string): Promise<firebase.auth.UserCredential> {
+    return this.afAuth.currentUser.then(user => {
+      if (!user) { Promise.reject(new Error('User is not logged in.')); }
+      console.log(user.email, password);
+      const credentials = firebase.auth.EmailAuthProvider.credential(user.email, password);
+      return user.reauthenticateWithCredential(credentials);
+    });
+  }
 }

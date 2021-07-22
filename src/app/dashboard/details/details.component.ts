@@ -65,7 +65,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
         if (!result) { return; }
         if (!result.thumbnail) { delete result.thumbnail; }
         result.id = this.post.id;
-        result.time = new Date();
+        // result.time = new Date();
         this.postService.addEditPost(result).then(() => this.appService.openSnackBar('Posted successfully.', 'Dismiss'))
         .catch(error => this.appService.openSnackBar(error.message, 'Dismiss'));
       });

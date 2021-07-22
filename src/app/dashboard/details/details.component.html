@@ -5,7 +5,8 @@
         <ngs-avatar size = '36px' [photoUrl]="post?.authorURL" [name]="post?.author"></ngs-avatar>
       </div>
       <mat-card-title>{{post.title}}</mat-card-title>
-      <mat-card-subtitle>{{post.author || 'no name'}}</mat-card-subtitle>
+      <mat-card-subtitle>{{post.author || 'no name'}} at {{(post?.time?.toDate() | date:'d-MM-y, HH:mm') || post?.time}}</mat-card-subtitle>
+      <div class="flex-row" style="flex-grow: 1;"></div>
       <button mat-button [matTooltip]="post.privacy === '0' ? 'public' : post.privacy === '1' ? 'private' : post.privacy"><mat-icon>{{post.privacy === '0' ? 'public' : post.privacy === '1' ? 'vpn_lock' : post.privacy}}</mat-icon></button>
       <button mat-button (click)="edit()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid" matTooltip="Edit post"><mat-icon>edit</mat-icon></button>
       <button mat-button (click)="delete()" onclick="blur()" *ngIf="post?.authorId === currentUser?.uid" matTooltip="Delete post"><mat-icon>delete</mat-icon></button>

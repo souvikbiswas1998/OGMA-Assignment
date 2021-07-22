@@ -372,6 +372,11 @@ export class ProfileComponent implements OnInit, OnDestroy{
     this.auth.updateUserData({ uid: this.profile.uid, photoURL: firebase.firestore.FieldValue.delete() as any });
     this.appService.openSnackBar('Photo removed successfully.');
   }
+
+  public someMethod(data: any, isMonth: boolean, index?: number): void {
+    if(isMonth && this.toMonth < data) this.toMonth = this.months[data].value;
+    else if(this.toYear < data.min) this.toYear = this.years[index].max;
+  }
 }
 
 // tslint:disable: no-trailing-whitespace

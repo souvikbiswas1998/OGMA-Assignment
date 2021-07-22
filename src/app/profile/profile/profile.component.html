@@ -72,16 +72,18 @@
 
     <div style="margin-left: auto">
       <select [(ngModel)]="from" style="width: 150px; height: 30px">
-        <option *ngFor="let m of months" [value]="m.value">
+        <option *ngFor="let m of months; let i = index" [value]="m.value" (click)="someMethod(i, true)">
           {{ m.month }}
         </option>
       </select>
       &nbsp;&nbsp;
 
       <select [(ngModel)]="toMonth" style="width: 150px; height: 30px">
-        <option *ngFor="let m1 of months" [value]="m1.value">
-          {{ m1.month }}
-        </option>
+        <ng-container *ngFor="let m1 of months">
+          <option [ngValue]="m1.value" *ngIf="m1.value >= from">
+            {{ m1.month }}
+          </option>
+        </ng-container>
       </select>
       <button mat-raised-button (click)="applyDateFilter()" style="margin-left:32px">
         Apply Date Filter
@@ -90,16 +92,18 @@
 
     <div style="margin-left: auto">
       <select [(ngModel)]="fromYear" style="width: 150px; height: 30px">
-        <option *ngFor="let m of years" [value]="m.min">
+        <option *ngFor="let m of years; let i = index" [value]="m.min" (click)="someMethod(m, false, i)">
           {{ m.year }}
         </option>
       </select>
       &nbsp;&nbsp;
 
       <select [(ngModel)]="toYear" style="width: 150px; height: 30px">
-        <option *ngFor="let m1 of years" [value]="m1.max">
-          {{ m1.year }}
-        </option>
+        <ng-container *ngFor="let m1 of years">
+          <option [ngValue]="m1.max" *ngIf="m1.max >= fromYear">
+            {{ m1.year }}
+          </option>
+        </ng-container>
       </select>
       <button mat-raised-button (click)="applyYearFilter()" style="margin-left:32px">
         Apply Year Filter

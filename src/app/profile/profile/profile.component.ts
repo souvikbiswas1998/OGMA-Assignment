@@ -431,7 +431,7 @@ export class DialogOverviewExampleDialog {
           // Validators.pattern(this.regex),
           Validators.required, matchPassword]),
         repeatPassword: new FormControl('', [matchPassword, Validators.required]),
-        oldPassword: new FormControl('', [matchPassword, Validators.required])
+        oldPassword: new FormControl('', [Validators.required])
       });
     }
 
